@@ -1,5 +1,5 @@
 defmodule RSyslog.RFC3164.TCP do
-  alias RSyslog.RFC3164.Formatter
+  alias RSyslog.RFC3164.{Formatter,Validate}
 
   @doc """
   Connect to a given syslog host when given a binary address.
@@ -41,22 +41,6 @@ defmodule RSyslog.RFC3164.TCP do
     :gen_tcp.close(socket)
   end
 
-  defp validate_initial_msg(msg) do
-    if byte_size(msg) > 0 do
-      {:ok, msg}
-    else
-      {:error, :empty_message}
-    end
-  end
-
-  defp validate_packet_size(msg) do
-    if byte_size(msg) <= 1024 do
-      {:ok, msg}
-    else
-      {:error, :packet_size}
-    end
-  end
-
   @doc """
   Send a message over a given `socket`. The message is formatted
   according to RFC3154 before being sent.
@@ -66,9 +50,9 @@ defmodule RSyslog.RFC3164.TCP do
     - {:error, reason}
   """
   def send(socket, msg) do
-    with {:ok, msg} <- validate_initial_msg(msg),
+    with {:ok, msg} <- Validate.initial_msg(msg),
          {:ok, msg} <- Formatter.format(msg),
-         {:ok, msg} <- validate_packet_size(msg) do
+         {:ok, msg} <- Validate.packet_size(msg) do
       :gen_tcp.send(socket, msg)
     else
       {:error, reason} -> {:error, reason}
