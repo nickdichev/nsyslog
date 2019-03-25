@@ -1,5 +1,5 @@
 defmodule RSyslog.RFC3164.TCP do
-  alias RSyslog.RFC3164.{Formatter,Validate}
+  alias RSyslog.RFC3164.{Formatter, Validate}
 
   @doc """
   Connect to a given syslog host when given a binary address.

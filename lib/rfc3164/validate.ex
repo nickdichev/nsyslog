@@ -1,5 +1,4 @@
 defmodule RSyslog.RFC3164.Validate do
-  
   def initial_msg(msg) when byte_size(msg) > 0, do: {:ok, msg}
   def initial_msg(_msg), do: {:error, :empty_message}
 
