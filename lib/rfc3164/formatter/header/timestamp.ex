@@ -38,8 +38,7 @@ defmodule RSyslog.RFC3164.Formatter.Header.Timestamp do
   end
 
   @doc """
-  Generates a timestamp for a syslog message. The format is according to 
-  RFC3164 _except_ with the timezone appended.
+  Generates a timestamp for a syslog message.
 
   ## Returns
     - "`timestamp`"
