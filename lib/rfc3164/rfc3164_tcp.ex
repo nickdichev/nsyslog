@@ -41,7 +41,15 @@ defmodule RSyslog.RFC3164.TCP do
     :gen_tcp.close(socket)
   end
 
-  defp validate_size(msg) do
+  defp validate_initial_msg(msg) do
+    if byte_size(msg) > 0 do
+      {:ok, msg}
+    else
+      {:error, :empty_message}
+    end
+  end
+
+  defp validate_packet_size(msg) do
     if byte_size(msg) <= 1024 do
       {:ok, msg}
     else
@@ -58,8 +66,9 @@ defmodule RSyslog.RFC3164.TCP do
     - {:error, reason}
   """
   def send(socket, msg) do
-    with {:ok, msg} <- Formatter.format(msg),
-         {:ok, msg} <- validate_size(msg) do
+    with {:ok, msg} <- validate_initial_msg(msg),
+         {:ok, msg} <- Formatter.format(msg),
+         {:ok, msg} <- validate_packet_size(msg) do
       :gen_tcp.send(socket, msg)
     else
       {:error, reason} -> {:error, reason}
