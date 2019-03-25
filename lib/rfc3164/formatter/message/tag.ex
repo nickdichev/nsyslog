@@ -19,7 +19,8 @@ defmodule RSyslog.RFC3164.Formatter.Message.Tag do
         {:ok, application} -> application |> to_string()
         :undefined -> "rsyslog"
       end
-
-    app_name <> "[" <> pid_to_binary(self()) <> "]" <> ":"
+    
+    pid_str = self() |> pid_to_binary()
+    app_name <> "[" <> pid_str <> "]" <> ":"
   end
 end
