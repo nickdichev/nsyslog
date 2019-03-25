@@ -6,7 +6,7 @@ defmodule RSyslog.RFC3164.TCP do
 
   ## Returns
     - {:ok, socket}
-    - {:error,  reason}
+    - {:error, reason}
   """
   def connect(address, port) when is_binary(address) and is_integer(port) do
     connect(String.to_charlist(address), port)
