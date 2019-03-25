@@ -7,7 +7,7 @@ defmodule RSyslog.RFC3164.Formatter.Priority.Test do
   end
 
   test "invalid facility level (gt 23)" do
-    assert Priority.get(24, 1) == {:error,  :facility_level}
+    assert Priority.get(24, 1) == {:error, :facility_level}
   end
 
   test "invalid severity level (lt 0)" do
@@ -21,7 +21,7 @@ defmodule RSyslog.RFC3164.Formatter.Priority.Test do
   test "valid priority levels" do
     for facility <- 1..23 do
       for severity <- 1..7 do
-        priority = facility * 8 + severity |> Integer.to_string()
+        priority = (facility * 8 + severity) |> Integer.to_string()
         expected = "<" <> priority <> ">"
         assert Priority.get(facility, severity) == {:ok, expected}
       end
@@ -29,11 +29,11 @@ defmodule RSyslog.RFC3164.Formatter.Priority.Test do
   end
 
   test "valid priority format" do
-    {:ok, pri} = Priority.get(1, 3)  
+    {:ok, pri} = Priority.get(1, 3)
     assert byte_size(pri) == 4
     assert pri == <<60, 49, 49, 62>>
 
-    {:ok, pri} = Priority.get(13, 4)  
+    {:ok, pri} = Priority.get(13, 4)
     assert byte_size(pri) == 5
     assert pri == <<60, 49, 48, 56, 62>>
   end

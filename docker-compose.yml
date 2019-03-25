@@ -7,3 +7,5 @@ services:
       - 514:514
       - 601:601
       - 6514:6514
+    volumes:
+      - ${PWD}/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro

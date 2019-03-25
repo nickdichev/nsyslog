@@ -5,4 +5,4 @@ defmodule RSyslog.RFC3164.Formatter.Message.Test do
   test "tags message" do
     assert Regex.match?(~r/rsyslog\[\d+\.\d+\.\d+\]: test message/, Message.get("test message"))
   end
-end 
+end

@@ -15,9 +15,8 @@ defmodule RSyslog.RFC3164.Formatter do
     - {:error, reason}
   """
   def format(msg, facility \\ 14, severity \\ 6) do
-    with {:ok, priority} <- Priority.get(facility, severity) do
-      {:ok, priority <> Header.get() <> Message.get(msg) <> "\n"}
-    else
+    case Priority.get(facility, severity) do
+      {:ok, priority} -> {:ok, priority <> Header.get() <> Message.get(msg) <> "\n"}
       {:error, reason} -> {:error, reason}
     end
   end
