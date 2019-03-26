@@ -1,18 +1,18 @@
-defmodule RSyslog.RFC3164.Formatter.Test do
+defmodule RSyslog.RFC3164.Format.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.RFC3164.Formatter
-  alias RSyslog.RFC3164.Formatter.Priority
+  alias RSyslog.Format.RFC3164, as: Format
+  alias RSyslog.Format.Common.Priority
 
   test "errors on invalid facility" do
-    assert Formatter.format("test message", -1, 3) == {:error, :facility_level}
+    assert Format.message("test message", -1, 3) == {:error, :facility_level}
   end
 
   test "errors on invalid severity" do
-    assert Formatter.format("test message", 1, -3) == {:error, :severity_level}
+    assert Format.message("test message", 1, -3) == {:error, :severity_level}
   end
 
   test "formats valid message" do
-    {:ok, msg} = Formatter.format("test message")
+    {:ok, msg} = Format.message("test message")
     {:ok, pri} = Priority.get(14, 6)
     {:ok, host} = :inet.gethostname()
     host = host |> to_string()

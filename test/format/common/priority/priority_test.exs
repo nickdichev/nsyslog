@@ -1,6 +1,6 @@
-defmodule RSyslog.RFC3164.Formatter.Priority.Test do
+defmodule RSyslog.Format.Common.Priority.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.RFC3164.Formatter.Priority
+  alias RSyslog.Format.Common.Priority
 
   test "invalid facility level (lt 0)" do
     assert Priority.get(-1, 4) == {:error, :facility_level}

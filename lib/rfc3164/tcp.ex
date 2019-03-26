@@ -1,5 +1,6 @@
 defmodule RSyslog.RFC3164.TCP do
-  alias RSyslog.RFC3164.{Formatter, Validate}
+  alias RSyslog.Format.RFC3164, as: Format
+  alias RSyslog.RFC3164.Validate
 
   @doc """
   Connect to a given syslog host when given a binary address.
@@ -51,7 +52,7 @@ defmodule RSyslog.RFC3164.TCP do
   """
   def send(socket, msg) do
     with {:ok, msg} <- Validate.initial_msg(msg),
-         {:ok, msg} <- Formatter.format(msg),
+         {:ok, msg} <- Format.message(msg),
          {:ok, msg} <- Validate.packet_size(msg) do
       :gen_tcp.send(socket, msg)
     else

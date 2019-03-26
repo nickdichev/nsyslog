@@ -1,5 +1,5 @@
-defmodule RSyslog.RFC3164.Formatter.Message do
-  alias RSyslog.RFC3164.Formatter.Message.Tag
+defmodule RSyslog.Format.RFC3164.Message do
+  alias RSyslog.Format.RFC3164.Message.Tag
 
   @doc """
   Prepends a given message with a tag defined by RFC3164.

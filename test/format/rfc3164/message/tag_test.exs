@@ -1,6 +1,6 @@
-defmodule RSyslog.RFC3164.Formatter.Message.Tag.Test do
+defmodule RSyslog.Format.RFC3164.Message.Tag.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.RFC3164.Formatter.Message.Tag
+  alias RSyslog.Format.RFC3164.Message.Tag
 
   test "get tag" do
     assert Regex.match?(~r/rsyslog\[\d+\.\d+\.\d+\]/, Tag.get())

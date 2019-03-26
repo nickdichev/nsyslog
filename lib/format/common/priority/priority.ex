@@ -1,4 +1,4 @@
-defmodule RSyslog.RFC3164.Formatter.Priority do
+defmodule RSyslog.Format.Common.Priority do
   @lt_ascii 60
   @gt_ascii 62
 

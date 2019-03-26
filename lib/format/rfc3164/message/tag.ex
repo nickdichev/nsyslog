@@ -1,4 +1,4 @@
-defmodule RSyslog.RFC3164.Formatter.Message.Tag do
+defmodule RSyslog.Format.RFC3164.Message.Tag do
   defp pid_to_binary(pid) when is_pid(pid) do
     pid
     |> :erlang.pid_to_list()

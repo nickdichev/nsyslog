@@ -1,4 +1,4 @@
-defmodule RSyslog.RFC3164.Formatter.Header.Timestamp do
+defmodule RSyslog.Format.RFC3164.Header.Timestamp do
   defp get_month(1), do: "Jan"
   defp get_month(2), do: "Feb"
   defp get_month(3), do: "Mar"

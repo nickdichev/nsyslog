@@ -1,5 +1,6 @@
-defmodule RSyslog.RFC3164.Formatter do
-  alias RSyslog.RFC3164.Formatter.{Priority, Header, Message}
+defmodule RSyslog.Format.RFC3164 do
+  alias RSyslog.Format.Common.Priority
+  alias RSyslog.Format.RFC3164.{Header, Message}
 
   @doc """
   Format a message according to RFC3164. The default facility level used is 14 (log alert)
@@ -14,7 +15,7 @@ defmodule RSyslog.RFC3164.Formatter do
     - "`formatted_message`"
     - {:error, reason}
   """
-  def format(msg, facility \\ 14, severity \\ 6) do
+  def message(msg, facility \\ 14, severity \\ 6) do
     case Priority.get(facility, severity) do
       {:ok, priority} -> {:ok, priority <> Header.get() <> Message.get(msg) <> "\n"}
       {:error, reason} -> {:error, reason}
