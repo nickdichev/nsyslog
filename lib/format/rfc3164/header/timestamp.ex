@@ -12,21 +12,21 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp do
   defp get_month(11), do: "Nov"
   defp get_month(12), do: "Dec"
 
-  defp get_day(dt_day) do
+  def get_day(dt_day) do
     # The day needs to be padded with leading spaces, eg: " 7"
     dt_day
     |> to_string()
     |> String.pad_leading(2, " ")
   end
 
-  defp format_time(dt_value) do
+  def format_time(dt_value) do
     # The time needs for be padded with leading 0's, eg: "02"
     dt_value
     |> to_string()
     |> String.pad_leading(2, "0")
   end
 
-  defp get_time(%{hour: hour, minute: minute, second: second} = _datetime) do
+  def get_time(%{hour: hour, minute: minute, second: second} = _datetime) do
     hour = hour |> format_time()
     minute = minute |> format_time()
     second = second |> format_time()
