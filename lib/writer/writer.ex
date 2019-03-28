@@ -26,6 +26,14 @@ defmodule RSyslog.Writer do
     GenServer.call(pid, {:send, message})
   end
 
+  @doc """
+  Client call to send a message asynchronously.
+  """
+  def send_async(message) do
+    pid = GenServer.whereis(__MODULE__)
+    GenServer.cast(pid, {:send, message})
+  end
+
   ##################
   ##### SERVER #####
   ##################
@@ -84,6 +92,15 @@ defmodule RSyslog.Writer do
       {:error, reason} -> 
         Logger.warn("Could not send message to #{state.host}:#{state.port} -- #{reason}.")
         {:reply, :error, state}
+    end
+  end
+
+  def handle_cast({:send, message}, %{socket: socket} = state) do
+    case RSyslog.RFC3164.TCP.send(socket, message) do
+      :ok -> {:noreply, state}
+      {:error, reason} -> 
+        Logger.warn("Could not send message to #{state.host}:#{state.port} -- #{reason}.")
+        {:noreply, state}
     end
   end
 end
