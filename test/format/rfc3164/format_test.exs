@@ -19,9 +19,9 @@ defmodule RSyslog.RFC3164.Format.Test do
     app = "rsyslog"
 
     regex =
-      ~r/#{pri}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( \d{1}|\d{2}) \d{2}:\d{2}:\d{2} #{host} #{
-        app
-      }\[\d+\.\d+\.\d+\]:/
+      ~r/#{pri}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( \d{1}|\d{2}) \d{2}:\d{2}:\d{2} #{
+        host
+      } #{app}\[\d+\.\d+\.\d+\]:/
 
     assert Regex.match?(regex, msg)
   end
