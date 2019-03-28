@@ -88,8 +88,10 @@ defmodule RSyslog.Writer do
 
   def handle_call({:send, message}, _, %{socket: socket} = state) do
     case RSyslog.RFC3164.TCP.send(socket, message) do
-      :ok -> {:reply, :ok, state}
-      {:error, reason} -> 
+      :ok ->
+        {:reply, :ok, state}
+
+      {:error, reason} ->
         Logger.warn("Could not send message to #{state.host}:#{state.port} -- #{reason}.")
         {:reply, :error, state}
     end
@@ -97,8 +99,10 @@ defmodule RSyslog.Writer do
 
   def handle_cast({:send, message}, %{socket: socket} = state) do
     case RSyslog.RFC3164.TCP.send(socket, message) do
-      :ok -> {:noreply, state}
-      {:error, reason} -> 
+      :ok ->
+        {:noreply, state}
+
+      {:error, reason} ->
         Logger.warn("Could not send message to #{state.host}:#{state.port} -- #{reason}.")
         {:noreply, state}
     end
