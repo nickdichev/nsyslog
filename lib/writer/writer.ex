@@ -14,7 +14,7 @@ defmodule RSyslog.Writer do
   @doc """
   Client call to initialize a new GenServer to a given `host`:`port`.
   """
-  def start_link(state) do
+  def start_link(%Writer{} = state) do
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
   end
 
