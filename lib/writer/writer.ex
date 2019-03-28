@@ -5,7 +5,7 @@ defmodule RSyslog.Writer do
   require Logger
 
   alias RSyslog.Writer
-  alias RSyslog.Writer.Backoff
+  alias RSyslog.Writer.{Backoff, Registry}
 
   ##################
   ##### CLIENT #####
@@ -14,24 +14,22 @@ defmodule RSyslog.Writer do
   @doc """
   Client call to initialize a new GenServer to a given `host`:`port`.
   """
-  def start_link(%Writer{} = state) do
-    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+  def start_link(%Writer{aid: aid} = state) do
+    GenServer.start_link(__MODULE__, state, name: Registry.via_tuple(aid))
   end
 
   @doc """
   Client call to send a message synchronously.
   """
-  def send(message) do
-    pid = GenServer.whereis(__MODULE__)
-    GenServer.call(pid, {:send, message})
+  def send(aid, message) do
+    GenServer.call(Registry.via_tuple(aid), {:send, message})
   end
 
   @doc """
   Client call to send a message asynchronously.
   """
-  def send_async(message) do
-    pid = GenServer.whereis(__MODULE__)
-    GenServer.cast(pid, {:send, message})
+  def send_async(aid, message) do
+    GenServer.cast(Registry.via_tuple(aid), {:send, message})
   end
 
   ##################
@@ -86,6 +84,9 @@ defmodule RSyslog.Writer do
     end
   end
 
+  @doc """
+  Sever callback to send a message synchronously.
+  """
   def handle_call({:send, message}, _, %{socket: socket} = state) do
     case RSyslog.RFC3164.TCP.send(socket, message) do
       :ok ->
@@ -97,6 +98,9 @@ defmodule RSyslog.Writer do
     end
   end
 
+  @doc """
+  Sever callback to send a message synchronously.
+  """
   def handle_cast({:send, message}, %{socket: socket} = state) do
     case RSyslog.RFC3164.TCP.send(socket, message) do
       :ok ->
