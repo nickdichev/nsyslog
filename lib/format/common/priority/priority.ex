@@ -23,6 +23,10 @@ defmodule RSyslog.Format.Common.Priority do
   Get the priority data according to RFC3164. The encoding used in the 
   returned value is seven-bit ASCII in an eight bit field. 
 
+  ## Parameters
+    - `facility` - the facility level.
+    - `severity` - the severity level.
+
   ## Returns
     -  "<`priority`>"
     - {:error, reason}

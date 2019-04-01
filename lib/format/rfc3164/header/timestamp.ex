@@ -12,6 +12,12 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp do
   defp get_month(11), do: "Nov"
   defp get_month(12), do: "Dec"
 
+  @doc """
+  Formates a given day part of a `DateTime`.
+
+  ## Parameters
+    - `dt_day` - the day to be formatted.
+  """
   def get_day(dt_day) do
     # The day needs to be padded with leading spaces, eg: " 7"
     dt_day

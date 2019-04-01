@@ -9,7 +9,7 @@ defmodule RSyslog.Writer.Registry do
   @doc """
   Callback the `RSyslog.Application` supervisor calls to start the writer registry.
   """
-  def child_spec(_) do
+  def child_spec(_args) do
     Supervisor.child_spec(
       Registry,
       id: __MODULE__,
@@ -17,6 +17,9 @@ defmodule RSyslog.Writer.Registry do
     )
   end
 
+  @doc """
+  Get the via tuple for a given account ID. 
+  """
   def via_tuple(aid) do
     # Register this writer in `:writer_registry` under the name {__MODULE__, aid}
     # so we can lookup the pid for this writer with `aid` when its time to send.

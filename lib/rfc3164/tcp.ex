@@ -5,6 +5,10 @@ defmodule RSyslog.RFC3164.TCP do
   @doc """
   Connect to a given syslog host when given a binary address.
 
+  ## Parameters
+    - `address` - host to connect to.
+    - `port` - port to connect to.
+
   ## Returns
     - {:ok, socket}
     - {:error, reason}
@@ -15,6 +19,10 @@ defmodule RSyslog.RFC3164.TCP do
 
   @doc """
   Connect to a given syslog host. 
+
+  ## Parameters
+    -  `address` - host to connect to.
+    - `port` - port to connect to.
 
   ## Returns
     - {:ok, socket}
@@ -35,6 +43,9 @@ defmodule RSyslog.RFC3164.TCP do
   @doc """
   Close a given socket.
 
+  ## Parameters
+    - `socket` - the socket to close.
+
   ## Returns
     - :ok
   """
@@ -45,6 +56,10 @@ defmodule RSyslog.RFC3164.TCP do
   @doc """
   Send a message over a given `socket`. The message is formatted
   according to RFC3154 before being sent.
+
+  ## Parameters
+    - `socket` - the socket which will be used to send the message.
+    - `msg` - the message to send.
 
   ## Returns
     - :ok
