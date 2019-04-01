@@ -27,10 +27,12 @@ defmodule RSyslog.Writer do
   ## Parameters
     - `aid` - The account ID to send the message to. This value is looked up in the 
       `Rsyslog.Writer.Registry` to find the writer's PID. 
-    - `message` - The message to send
+    - `message` - The message to send.
+    - `facility` - The facility level to use (default: 14).
+    - `severity` - The severity level to use (default: 6).
   """
-  def send(aid, message) do
-    GenServer.call(Registry.via_tuple(aid), {:send, message})
+  def send(aid, message, facility \\ 14, severity \\ 6) do
+    GenServer.call(Registry.via_tuple(aid), {:send, message, facility, severity})
   end
 
   @doc """
@@ -40,9 +42,11 @@ defmodule RSyslog.Writer do
     - `aid` - The account ID to send the message to. This value is looked up in the 
       `Rsyslog.Writer.Registry` to find the writer's PID. 
     - `message` - The message to send
+    - `facility` - The facility level to use (default: 14)
+    - `severity` - The severity level to use (default: 6)
   """
-  def send_async(aid, message) do
-    GenServer.cast(Registry.via_tuple(aid), {:send, message})
+  def send_async(aid, message, facility \\ 14, severity \\ 6) do
+    GenServer.cast(Registry.via_tuple(aid), {:send, message, facility, severity})
   end
 
   ##################
@@ -110,8 +114,8 @@ defmodule RSyslog.Writer do
     - `{:send, message}` - the message to send.
     - `state` - the `Writer`'s current state.
   """
-  def handle_call({:send, message}, _, %{socket: socket} = state) do
-    case RSyslog.RFC3164.TCP.send(socket, message) do
+  def handle_call({:send, message, facility, severity}, _, %{socket: socket} = state) do
+    case RSyslog.RFC3164.TCP.send(socket, message, facility, severity) do
       :ok ->
         {:reply, :ok, state}
 
@@ -128,8 +132,8 @@ defmodule RSyslog.Writer do
     - `{:send, message}` - the message to send.
     - `state` - the `Writer`'s current state.
   """
-  def handle_cast({:send, message}, %{socket: socket} = state) do
-    case RSyslog.RFC3164.TCP.send(socket, message) do
+  def handle_cast({:send, message, facility, severity}, %{socket: socket} = state) do
+    case RSyslog.RFC3164.TCP.send(socket, message, facility, severity) do
       :ok ->
         {:noreply, state}
 

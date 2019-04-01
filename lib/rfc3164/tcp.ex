@@ -65,9 +65,9 @@ defmodule RSyslog.RFC3164.TCP do
     - :ok
     - {:error, reason}
   """
-  def send(socket, msg) do
+  def send(socket, msg, facility, severity) do
     with {:ok, msg} <- Validate.initial_msg(msg),
-         {:ok, msg} <- Format.message(msg),
+         {:ok, msg} <- Format.message(msg, facility, severity),
          {:ok, msg} <- Validate.packet_size(msg) do
       :gen_tcp.send(socket, msg)
     else
