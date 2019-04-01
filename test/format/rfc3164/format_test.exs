@@ -2,6 +2,7 @@ defmodule RSyslog.RFC3164.Format.Test do
   use ExUnit.Case, async: true
   alias RSyslog.Format.RFC3164, as: Format
   alias RSyslog.Format.Common.Priority
+  alias RSyslog.Format.RFC3164.Message.Tag
 
   test "errors on invalid facility" do
     assert Format.message("test message", -1, 3) == {:error, :facility_level}
@@ -12,17 +13,32 @@ defmodule RSyslog.RFC3164.Format.Test do
   end
 
   test "formats valid message" do
-    {:ok, msg} = Format.message("test message")
     {:ok, pri} = Priority.get(14, 6)
     {:ok, host} = :inet.gethostname()
     host = host |> to_string()
     app = "rsyslog"
+    pid = self() |> Tag.pid_to_binary()
+    dt = %DateTime{
+      day: 1,
+      hour: 3,
+      minute: 3,
+      month: 4,
+      second: 44,
+      std_offset: 0,
+      time_zone: "Etc/UTC",
+      utc_offset: 0,
+      year: 2019,
+      zone_abbr: "UTC"
+    }
 
-    regex =
-      ~r/#{pri}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( \d{1}|\d{2}) \d{2}:\d{2}:\d{2} #{
-        host
-      } #{app}\[\d+\.\d+\.\d+\]:/
+    expected = [
+      pri,
+      [["Apr", " ", " 1", " ", ["03", ":", "03", ":", "44"]], " ", host, " "],
+      [[app, "[", pid, "]", ":"], " ", "test message"],
+      "\n"
+    ]
 
-    assert Regex.match?(regex, msg)
+    {:ok, msg} = Format.message("test message", 14, 6, dt)
+    assert expected == msg
   end
 end

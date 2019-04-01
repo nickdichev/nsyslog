@@ -3,8 +3,19 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp.Test do
   alias RSyslog.Format.RFC3164.Header.Timestamp
 
   test "gets timestamp" do
-    regex = ~r/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( \d{1}|\d{2}) \d{2}:\d{2}:\d{2}/
-    assert Regex.match?(regex, Timestamp.get())
+    dt = %DateTime{
+      day: 1,
+      hour: 3,
+      minute: 30,
+      month: 4,
+      second: 44,
+      std_offset: 0,
+      time_zone: "Etc/UTC",
+      utc_offset: 0,
+      year: 2019,
+      zone_abbr: "UTC"
+    }
+    assert ["Apr", " ", " 1", " ", ["03", ":", "30", ":", "44"]] == Timestamp.get(dt)
   end
 
   test "pads day with leading spaces" do
@@ -25,6 +36,6 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp.Test do
 
   test "formats time correctly" do
     mock_datetime = %{hour: 7, minute: 2, second: 32}
-    assert Timestamp.get_time(mock_datetime) == "07:02:32"
+    assert Timestamp.get_time(mock_datetime) == ["07", ":", "02", ":", "32"]
   end
 end

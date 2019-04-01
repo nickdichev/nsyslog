@@ -36,21 +36,24 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp do
     hour = hour |> format_time()
     minute = minute |> format_time()
     second = second |> format_time()
-    hour <> ":" <> minute <> ":" <> second
+    [hour, ":", minute, ":", second]
   end
 
   defp format(datetime) do
-    get_month(datetime.month) <> " " <> get_day(datetime.day) <> " " <> get_time(datetime)
+    [get_month(datetime.month), " ", get_day(datetime.day), " ", get_time(datetime)]
   end
 
   @doc """
   Generates a timestamp for a syslog message.
 
+  ## Parameters
+    - `now` - DateTime to parse.
+
   ## Returns
     - "`timestamp`"
   """
-  def get() do
-    DateTime.utc_now()
+  def get(now) do
+    now
     |> format()
   end
 end

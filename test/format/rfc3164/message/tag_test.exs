@@ -3,6 +3,7 @@ defmodule RSyslog.Format.RFC3164.Message.Tag.Test do
   alias RSyslog.Format.RFC3164.Message.Tag
 
   test "get tag" do
-    assert Regex.match?(~r/rsyslog\[\d+\.\d+\.\d+\]/, Tag.get())
+    pid = self() |> Tag.pid_to_binary()
+    assert ["rsyslog", "[", pid, "]", ":"] == Tag.get()
   end
 end

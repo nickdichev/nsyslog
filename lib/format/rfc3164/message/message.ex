@@ -7,5 +7,5 @@ defmodule RSyslog.Format.RFC3164.Message do
   ## Returns
     - "`message"`
   """
-  def get(msg), do: Tag.get() <> " " <> msg
+  def get(msg), do: [Tag.get(), " ", msg]
 end

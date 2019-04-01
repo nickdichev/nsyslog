@@ -8,7 +8,7 @@ defmodule RSyslog.Format.RFC3164.Header do
   ## Returns
     -  "`header`"
   """
-  def get() do
-    Timestamp.get() <> " " <> Hostname.get() <> " "
+  def get(now) do
+    [Timestamp.get(now), " ", Hostname.get(), " "]
   end
 end

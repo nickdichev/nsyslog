@@ -5,12 +5,25 @@ defmodule RSyslog.Format.RFC3164.Header.Test do
   test "gets header" do
     {:ok, host} = :inet.gethostname()
     host = host |> to_string()
+    dt = %DateTime{
+      day: 1,
+      hour: 3,
+      minute: 3,
+      month: 4,
+      second: 44,
+      std_offset: 0,
+      time_zone: "Etc/UTC",
+      utc_offset: 0,
+      year: 2019,
+      zone_abbr: "UTC"
+    }
+    expected = [
+      ["Apr", " ", " 1", " ", ["03", ":", "03", ":", "44"]],
+      " ",
+      host,
+      " "
+    ]
 
-    regex =
-      ~r/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( \d{1}|\d{2}) \d{2}:\d{2}:\d{2} #{
-        host
-      }/
-
-    assert Regex.match?(regex, Header.get())
+    assert expected == Header.get(dt)
   end
 end

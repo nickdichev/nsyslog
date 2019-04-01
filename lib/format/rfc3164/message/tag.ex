@@ -1,5 +1,5 @@
 defmodule RSyslog.Format.RFC3164.Message.Tag do
-  defp pid_to_binary(pid) when is_pid(pid) do
+  def pid_to_binary(pid) when is_pid(pid) do
     pid
     |> :erlang.pid_to_list()
     |> :erlang.list_to_binary()
@@ -21,6 +21,6 @@ defmodule RSyslog.Format.RFC3164.Message.Tag do
       end
 
     pid_str = self() |> pid_to_binary()
-    app_name <> "[" <> pid_str <> "]" <> ":"
+    [app_name, "[", pid_str, "]", ":"]
   end
 end
