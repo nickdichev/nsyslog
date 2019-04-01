@@ -7,16 +7,22 @@ Supervisor.create_writer(%Writer{aid: "ESS3", host: "localhost", port: 514})
 
 possible_aids = ["ESS1", "ESS2", "ESS3"]
 
+num_messages = 
+  case Enum.at(System.argv, 0) do
+    nil -> 1000
+    num -> num |> String.to_integer()
+  end
+
 aid_list = 
   Stream.repeatedly(fn -> Enum.random(possible_aids) end)
-  |> Enum.take(10000)
+  |> Enum.take(num_messages)
 
-start_time = DateTime.utc_now()
+start_time = System.monotonic_time(:second)
 
 Task.async_stream(aid_list, Writer, :send, ["hello!"])
 |> Enum.to_list()
 
-end_time = DateTime.utc_now()
+end_time = System.monotonic_time(:second)
+delta = end_time - start_time
 
-DateTime.diff(end_time, start_time)
-|> IO.puts()
+IO.puts("Took #{delta} seconds to send #{num_messages} messages.")
