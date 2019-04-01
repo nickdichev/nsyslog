@@ -3,6 +3,7 @@ defmodule RSyslog.RFC3164.Format.Test do
   alias RSyslog.Format.RFC3164, as: Format
   alias RSyslog.Format.Common.Priority
   alias RSyslog.Format.RFC3164.Message.Tag
+  import RSyslog.TestHelpers
 
   test "errors on invalid facility" do
     assert Format.message("test message", -1, 3) == {:error, :facility_level}
@@ -16,7 +17,7 @@ defmodule RSyslog.RFC3164.Format.Test do
     {:ok, pri} = Priority.get(14, 6)
     {:ok, host} = :inet.gethostname()
     host = host |> to_string()
-    app = "rsyslog"
+    app = get_app()
     pid = self() |> Tag.pid_to_binary()
     dt = %DateTime{
       day: 1,
