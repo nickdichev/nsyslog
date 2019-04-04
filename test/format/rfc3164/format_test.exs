@@ -1,8 +1,7 @@
 defmodule RSyslog.RFC3164.Format.Test do
   use ExUnit.Case, async: true
   alias RSyslog.Format.RFC3164, as: Format
-  alias RSyslog.Format.Common.Priority
-  alias RSyslog.Format.RFC3164.Message.Tag
+  alias RSyslog.Format.Common.{Priority, ProcessID}
   import RSyslog.TestHelpers
 
   test "errors on invalid facility" do
@@ -18,7 +17,8 @@ defmodule RSyslog.RFC3164.Format.Test do
     {:ok, host} = :inet.gethostname()
     host = host |> to_string()
     app = get_app()
-    pid = self() |> Tag.pid_to_binary()
+    pid = self() |> ProcessID.pid_to_binary()
+
     dt = %DateTime{
       day: 1,
       hour: 3,

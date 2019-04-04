@@ -15,6 +15,7 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp.Test do
       year: 2019,
       zone_abbr: "UTC"
     }
+
     assert ["Apr", " ", " 1", " ", ["03", ":", "30", ":", "44"]] == Timestamp.get(dt)
   end
 

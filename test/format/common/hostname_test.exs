@@ -1,6 +1,6 @@
-defmodule RSyslog.Format.RFC3164.Header.Hostname.Test do
+defmodule RSyslog.Format.Common.Hostname.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Format.RFC3164.Header.Hostname
+  alias RSyslog.Format.Common.Hostname
 
   test "gets hostname" do
     {:ok, host} = :inet.gethostname()

@@ -5,6 +5,7 @@ defmodule RSyslog.Format.RFC3164.Header.Test do
   test "gets header" do
     {:ok, host} = :inet.gethostname()
     host = host |> to_string()
+
     dt = %DateTime{
       day: 1,
       hour: 3,
@@ -17,6 +18,7 @@ defmodule RSyslog.Format.RFC3164.Header.Test do
       year: 2019,
       zone_abbr: "UTC"
     }
+
     expected = [
       ["Apr", " ", " 1", " ", ["03", ":", "03", ":", "44"]],
       " ",
