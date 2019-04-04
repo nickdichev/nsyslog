@@ -70,5 +70,4 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp do
     now
     |> format()
   end
-
 end

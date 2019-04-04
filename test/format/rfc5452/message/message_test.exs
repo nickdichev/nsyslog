@@ -5,5 +5,4 @@ defmodule RSyslog.Format.RFC5424.Message.Test do
   test "formats message" do
     assert "hello" == Message.get("hello")
   end
-
 end

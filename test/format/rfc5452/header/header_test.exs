@@ -24,8 +24,7 @@ defmodule RSyslog.Format.RFC5424.Header.Test do
       zone_abbr: "UTC"
     }
 
-    expected = [pri, 1, " ", "2019-04-01 03:03:44Z", host, " ",
-    app, " ", pid, " ", "-"]
+    expected = [pri, 1, " ", "2019-04-01 03:03:44Z", host, " ", app, " ", pid, " ", "-"]
 
     {:ok, ret} = Header.get(14, 6, dt, "-")
     assert expected == ret
