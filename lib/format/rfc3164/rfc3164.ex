@@ -16,7 +16,7 @@ defmodule RSyslog.Format.RFC3164 do
     - "`formatted_message`"
     - {:error, reason}
   """
-  def message(msg, facility \\ 14, severity \\ 6, now \\ DateTime.utc_now()) do
+  def message(msg, facility \\ 14, severity \\ 6, now \\ nil) do
     case Priority.get(facility, severity) do
       {:ok, priority} -> {:ok, [priority, Header.get(now), Message.get(msg), "\n"]}
       {:error, reason} -> {:error, reason}

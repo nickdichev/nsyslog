@@ -44,6 +44,20 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp do
   end
 
   @doc """
+  Generates a timestamp for a syslog message at the current timestamp.
+
+  ## Parameters
+    - `nil` - Default value for "now".
+
+  ## Returns
+    - "`timestamp`"
+  """
+  def get(nil) do
+    DateTime.utc_now()
+    |> format()
+  end
+
+  @doc """
   Generates a timestamp for a syslog message.
 
   ## Parameters
@@ -56,4 +70,5 @@ defmodule RSyslog.Format.RFC3164.Header.Timestamp do
     now
     |> format()
   end
+
 end

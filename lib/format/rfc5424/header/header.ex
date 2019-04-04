@@ -7,19 +7,20 @@ defmodule RSyslog.Format.RFC5424.Header do
   def get(facility, severity, now, msgid) do
     case Priority.get(facility, severity) do
       {:ok, priority} ->
-        {:ok, [
-          priority,
-          @syslog_version,
-          " ",
-          Timestamp.get(now),
-          Hostname.get(),
-          " ",
-          AppName.get(),
-          " ",
-          ProcessID.pid_to_binary(self()),
-          " ",
-          msgid
-        ]}
+        {:ok,
+         [
+           priority,
+           @syslog_version,
+           " ",
+           Timestamp.get(now),
+           Hostname.get(),
+           " ",
+           AppName.get(),
+           " ",
+           ProcessID.pid_to_binary(self()),
+           " ",
+           msgid
+         ]}
 
       {:error, reason} ->
         {:error, reason}
