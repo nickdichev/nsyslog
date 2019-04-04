@@ -3,7 +3,7 @@ defmodule RSyslog.Format.RFC5424.Message.Test do
   alias RSyslog.Format.RFC5424.Message
 
   test "formats message" do
-    assert "hello" = Message.get("hello")
+    assert "hello" == Message.get("hello")
   end
 
 end

@@ -3,6 +3,6 @@ defmodule RSyslog.Format.RFC5424.StructuredData.Test do
   alias RSyslog.Format.RFC5424.StructuredData
 
   test "gets nilvalue" do
-    assert "-" = StructuredData.get(nil)
+    assert "-" == StructuredData.get(nil)
   end
 end
