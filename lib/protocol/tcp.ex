@@ -97,5 +97,4 @@ defmodule RSyslog.Protocol.TCP do
       {:error, reason} -> {:error, reason}
     end
   end
-
 end
