@@ -1,11 +1,12 @@
 defmodule RSyslog.Writer do
-  defstruct host: nil, port: nil, aid: nil, socket: nil, backoff: 0
+  defstruct [:rfc, :protocol, :host, :port, :aid, :socket, backoff: 0]
 
   use GenServer
   require Logger
 
   alias __MODULE__
   alias RSyslog.Writer.{Backoff, Registry}
+  alias RSyslog.Protocol.TCP
 
   ##################
   ##### CLIENT #####
@@ -17,7 +18,7 @@ defmodule RSyslog.Writer do
   ## Parameters
     - `state` - initial `%Writer{}` struct, expects `:aid`, `:host`, and `:port`.
   """
-  def start_link(%Writer{aid: aid, host: _host, port: _port} = state) do
+  def start_link(%Writer{aid: aid} = state) do
     GenServer.start_link(__MODULE__, state, name: Registry.via_tuple(aid))
   end
 
@@ -62,7 +63,6 @@ defmodule RSyslog.Writer do
     - `state` - The inital state of the `Writer`. 
   """
   def init(%Writer{host: host, port: port} = state) do
-    state = Map.put(state, :socket, nil)
     {:ok, state, {:continue, {host, port}}}
   end
 
@@ -76,7 +76,7 @@ defmodule RSyslog.Writer do
   """
   def handle_continue({host, port}, state) do
     # Try to connect to the host
-    case RSyslog.RFC3164.TCP.connect(host, port) do
+    case TCP.connect(host, port) do
       {:ok, socket} ->
         Logger.info("Connected to #{host}:#{port}")
 
@@ -111,11 +111,11 @@ defmodule RSyslog.Writer do
   Sever callback to send a message synchronously.
 
   ## Parameters
-    - `{:send, message}` - the message to send.
+    - `{:send, message, facility, severity}` - the message to send.
     - `state` - the `Writer`'s current state.
   """
-  def handle_call({:send, message, facility, severity}, _, %{socket: socket} = state) do
-    case RSyslog.RFC3164.TCP.send(socket, message, facility, severity) do
+  def handle_call({:send, message, facility, severity}, _, %{rfc: rfc, socket: socket} = state) do
+    case TCP.send(rfc, socket, message, facility, severity) do
       :ok ->
         {:reply, :ok, state}
 
@@ -126,14 +126,14 @@ defmodule RSyslog.Writer do
   end
 
   @doc """
-  Sever callback to send a message synchronously.
+  Sever callback to send a message asynchronously.
 
   ## Parameters
-    - `{:send, message}` - the message to send.
+    - `{:send, message, facility, severity}` - the message to send.
     - `state` - the `Writer`'s current state.
   """
-  def handle_cast({:send, message, facility, severity}, %{socket: socket} = state) do
-    case RSyslog.RFC3164.TCP.send(socket, message, facility, severity) do
+  def handle_cast({:send, message, facility, severity}, %{rfc: rfc, socket: socket} = state) do
+    case TCP.send(rfc, socket, message, facility, severity) do
       :ok ->
         {:noreply, state}
 

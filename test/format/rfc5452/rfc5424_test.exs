@@ -5,11 +5,11 @@ defmodule RSyslog.RFC5424.Format.Test do
   import RSyslog.TestHelpers
 
   test "errors on invalid facility" do
-    assert Format.message("test message", -1, 3) == {:error, :facility_level}
+    assert Format.format("test message", -1, 3) == {:error, :facility_level}
   end
 
   test "errors on invalid severity" do
-    assert Format.message("test message", 1, -3) == {:error, :severity_level}
+    assert Format.format("test message", 1, -3) == {:error, :severity_level}
   end
 
   test "formats valid message" do
@@ -53,7 +53,7 @@ defmodule RSyslog.RFC5424.Format.Test do
       "\n"
     ]
 
-    {:ok, msg} = Format.message("test message", 14, 6, dt, "-")
+    {:ok, msg} = Format.format("test message", 14, 6, dt, "-")
     assert expected == msg
   end
 end

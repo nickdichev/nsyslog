@@ -1,6 +1,6 @@
-defmodule RSyslog.RFC3164.Validate.Test do
+defmodule RSyslog.Protocol.RFC3164.Validate.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.RFC3164.Validate
+  alias RSyslog.Protocol.RFC3164.Validate
 
   test "valid initial message" do
     assert Validate.initial_msg("test message") == {:ok, "test message"}

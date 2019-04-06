@@ -16,7 +16,7 @@ defmodule RSyslog.Format.RFC5424 do
     - "`formatted_message`"
     - {:error, reason}
   """
-  def message(msg, facility \\ 14, severity \\ 6, now \\ nil, msgid \\ "-") do
+  def format(msg, facility \\ 14, severity \\ 6, now \\ nil, msgid \\ "-") do
     case Header.get(facility, severity, now, msgid) do
       {:ok, header} -> {:ok, [header, " ", StructuredData.get(nil), " ", Message.get(msg), "\n"]}
       {:error, reason} -> {:error, reason}

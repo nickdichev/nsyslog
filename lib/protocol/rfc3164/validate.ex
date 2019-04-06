@@ -1,4 +1,4 @@
-defmodule RSyslog.RFC3164.Validate do
+defmodule RSyslog.Protocol.RFC3164.Validate do
   # We use byte_size since we are expecting a binary input
   def initial_msg(msg) when byte_size(msg) > 1024, do: {:error, :message_size}
   def initial_msg(msg) when byte_size(msg) > 0, do: {:ok, msg}

@@ -8,6 +8,7 @@ defmodule RSyslog.Format.Common.Hostname do
   def get() do
     case :inet.gethostname() do
       {:ok, hostname} -> hostname |> to_string()
+      {:error, _} -> "-"
     end
   end
 end
