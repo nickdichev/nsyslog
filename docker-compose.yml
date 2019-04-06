@@ -4,8 +4,10 @@ services:
   syslog:
     image: balabit/syslog-ng:latest
     ports:
-      - 514:514
-      - 601:601
-      - 6514:6514
+      - "514:514"
+      - "601:601"
+      - "6514:6514"
     volumes:
-      - ${PWD}/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro
+      - "${PWD}/docker/syslog-ng/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro"
+      - "${PWD}/docker/syslog-ng/certs:/etc/syslog-ng/certs:ro"
+    command: "--no-caps"
