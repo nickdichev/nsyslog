@@ -15,6 +15,7 @@ defmodule Rsyslog.MixProject do
   def application do
     [
       mod: {RSyslog.Application, []},
+      applications: [:ssl],
       extra_applications: [:logger]
     ]
   end
