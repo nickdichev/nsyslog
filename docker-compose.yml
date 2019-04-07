@@ -3,6 +3,7 @@ version: "3.5"
 services:
   syslog:
     image: balabit/syslog-ng:latest
+    container_name: syslog-ng
     ports:
       - "514:514"
       - "601:601"
@@ -10,12 +11,21 @@ services:
     volumes:
       - "${PWD}/docker/syslog-ng/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro"
       - "${PWD}/docker/syslog-ng/certs:/etc/syslog-ng/certs:ro"
+    networks:
+      - syslog-ng-net
     command: "--no-caps"
 
   rsyslog:
     image: rsyslog:latest
+    container_name: rsyslog
     build:
       context: "${PWD}"
       dockerfile: "${PWD}/docker/rsyslog/Dockerfile"
     volumes: 
       - "${PWD}/docker/rsyslog/certs:/etc/rsyslog/certs:ro"
+    networks:
+      - syslog-ng-net
+
+networks:
+  syslog-ng-net:
+    name: syslog-ng-net
