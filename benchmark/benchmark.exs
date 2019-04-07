@@ -1,9 +1,9 @@
 alias RSyslog.Writer
 alias RSyslog.Writer.Supervisor
 
-Supervisor.create_writer(%Writer{aid: "ESS1", host: "localhost", port: 514})
-Supervisor.create_writer(%Writer{aid: "ESS2", host: "localhost", port: 514})
-Supervisor.create_writer(%Writer{aid: "ESS3", host: "localhost", port: 514})
+Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "ESS1", host: "localhost", port: 514})
+Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "ESS2", host: "localhost", port: 514})
+Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "ESS3", host: "localhost", port: 514})
 
 possible_aids = ["ESS1", "ESS2", "ESS3"]
 
