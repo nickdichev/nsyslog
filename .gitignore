@@ -24,3 +24,4 @@ rsyslog-*.tar
 
 # Ignore test certs
 /docker/syslog-ng/certs/
+/docker/rsyslog/certs/
