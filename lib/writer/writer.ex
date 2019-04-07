@@ -1,14 +1,5 @@
 defmodule RSyslog.Writer do
-  defstruct [:rfc, 
-             :protocol, 
-             :host, 
-             :port, 
-             :aid, 
-             :socket, 
-             :connect_fun, 
-             :send_fun, 
-             backoff: 0
-            ]
+  defstruct [:rfc, :protocol, :host, :port, :aid, :socket, :connect_fun, :send_fun, backoff: 0]
 
   use GenServer
   require Logger
@@ -67,6 +58,7 @@ defmodule RSyslog.Writer do
     case rfc do
       :rfc3164 ->
         &TCP.connect/2
+
       :rfc5424 ->
         &SSL.connect/2
     end
@@ -76,6 +68,7 @@ defmodule RSyslog.Writer do
     case rfc do
       :rfc3164 ->
         &TCP.send/4
+
       :rfc5424 ->
         &SSL.send/4
     end
@@ -91,8 +84,8 @@ defmodule RSyslog.Writer do
   """
   def init(%Writer{rfc: rfc, host: host, port: port} = state) do
     # Cache the writer's connection and send functions in its state.
-    state = 
-      state  
+    state =
+      state
       |> Map.put(:connect_fun, get_connect_fun(rfc))
       |> Map.put(:send_fun, get_send_fun(rfc))
 
@@ -147,7 +140,11 @@ defmodule RSyslog.Writer do
     - `{:send, message, facility, severity}` - the message to send.
     - `state` - the `Writer`'s current state.
   """
-  def handle_call({:send, message, facility, severity}, _, %{send_fun: send, socket: socket} = state) do
+  def handle_call(
+        {:send, message, facility, severity},
+        _,
+        %{send_fun: send, socket: socket} = state
+      ) do
     case send.(socket, message, facility, severity) do
       :ok ->
         {:reply, :ok, state}
