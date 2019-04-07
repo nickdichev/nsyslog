@@ -1,6 +1,6 @@
 FROM elixir:1.8.1-alpine AS build
 
-WORKDIR /etc/rsyslog
+WORKDIR /etc/rsyslog/cookie
 COPY ./docker/rsyslog/cookie/prod_cookie .
 
 WORKDIR /build
@@ -27,7 +27,7 @@ USER default
 COPY --from=build /export/ .
 
 WORKDIR /etc/rsyslog/cookie
-COPY --from=build /etc/rsyslog/prod_cookie .
+COPY --from=build /etc/rsyslog/cookie/prod_cookie .
 
 WORKDIR /etc/rsyslog/certs
 COPY ./docker/rsyslog/certs/ .

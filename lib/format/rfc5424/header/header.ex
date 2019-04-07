@@ -13,6 +13,7 @@ defmodule RSyslog.Format.RFC5424.Header do
            @syslog_version,
            " ",
            Timestamp.get(now),
+           " ",
            Hostname.get(),
            " ",
            AppName.get(),
@@ -20,7 +21,8 @@ defmodule RSyslog.Format.RFC5424.Header do
            ProcessID.pid_to_binary(self()),
            " ",
            msgid
-         ]}
+         ]
+        }
 
       {:error, reason} ->
         {:error, reason}

@@ -34,7 +34,7 @@ defmodule RSyslog.Protocol.SSL do
       reuseaddr: true,
       send_timeout: 1000,
       send_timeout_close: true,
-      certfile: "/etc/rsyslog/certs/domain.pem"
+      certfile: Application.get_env(:rsyslog, :pemfile)
     ]
 
     :ssl.connect(address, port, conn_opts)
@@ -69,7 +69,12 @@ defmodule RSyslog.Protocol.SSL do
   """
   def send(socket, msg, facility, severity) do
     case RFC5424.format(msg, facility, severity) do
-      {:ok, msg} -> :ssl.send(socket, msg)
+      {:ok, msg} -> 
+        # Prepend the syslog message with the message length, as defined in RFC5425
+        octect_len = IO.iodata_length(msg) |> to_string()
+        msg = [octect_len, " ", msg]
+        IO.inspect(msg)
+        :ssl.send(socket, msg)
       {:error, reason} -> {:error, reason}
     end
   end
