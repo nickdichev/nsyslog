@@ -38,7 +38,6 @@ defmodule RSyslog.RFC5424.Format.Test do
         1,
         " ",
         "2019-04-01 03:03:44Z",
-        " ",
         host,
         " ",
         app,
