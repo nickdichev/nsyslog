@@ -71,6 +71,7 @@ defmodule RSyslog.Protocol.TCP do
     with {:ok, msg} <- Validate.initial_msg(msg),
          {:ok, msg} <- RFC3164.format(msg, facility, severity),
          {:ok, msg} <- Validate.packet_size(msg) do
+      IO.inspect(msg)
       :gen_tcp.send(socket, msg)
     else
       {:error, reason} -> {:error, reason}

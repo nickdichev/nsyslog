@@ -34,14 +34,11 @@ defmodule RSyslog.Format.Common.Priority do
   def get(facility, severity) do
     case validate_levels(facility, severity) do
       :ok ->
-        priority =
+        pri_val =
           calculate_priority(facility, severity)
-          |> Integer.to_string()
+          |> to_charlist
 
-        priority =
-          <<@lt_ascii::size(8)>> <>
-            priority <>
-            <<@gt_ascii::size(8)>>
+        priority = [@lt_ascii, pri_val, @gt_ascii]
 
         {:ok, priority}
 
