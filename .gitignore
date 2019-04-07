@@ -25,3 +25,6 @@ rsyslog-*.tar
 # Ignore test certs
 /docker/syslog-ng/certs/
 /docker/rsyslog/certs/
+
+# Ignore prod cookie
+/docker/rsyslog/cookie/
