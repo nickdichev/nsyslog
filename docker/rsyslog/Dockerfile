@@ -26,8 +26,11 @@ FROM bitwalker/alpine-erlang:latest
 USER default
 COPY --from=build /export/ .
 
-WORKDIR /etc/rsyslog
+WORKDIR /etc/rsyslog/cookie
 COPY --from=build /etc/rsyslog/prod_cookie .
+
+WORKDIR /etc/rsyslog/certs
+COPY ./docker/rsyslog/certs/ .
 
 ENTRYPOINT ["/opt/app/bin/rsyslog"]
 CMD ["console"]

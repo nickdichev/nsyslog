@@ -37,7 +37,7 @@ end
 environment :prod do
   set include_erts: true
   set include_src: false
-  set cookie: File.read!("/etc/rsyslog/prod_cookie") |> String.to_atom()
+  set cookie: File.read!("/etc/rsyslog/cookie/prod_cookie") |> String.to_atom()
   set vm_args: "rel/vm.args"
 end
 

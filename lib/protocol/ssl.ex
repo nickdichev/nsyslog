@@ -33,7 +33,8 @@ defmodule RSyslog.Protocol.SSL do
       keepalive: true,
       reuseaddr: true,
       send_timeout: 1000,
-      send_timeout_close: true
+      send_timeout_close: true,
+      certfile: "/etc/rsyslog/certs/domain.pem"
     ]
 
     :ssl.connect(address, port, conn_opts)
