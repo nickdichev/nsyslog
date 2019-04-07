@@ -1,12 +1,21 @@
 defmodule RSyslog.Writer do
-  defstruct [:rfc, :protocol, :host, :port, :aid, :socket, backoff: 0]
+  defstruct [:rfc, 
+             :protocol, 
+             :host, 
+             :port, 
+             :aid, 
+             :socket, 
+             :connect_fun, 
+             :send_fun, 
+             backoff: 0
+            ]
 
   use GenServer
   require Logger
 
   alias __MODULE__
   alias RSyslog.Writer.{Backoff, Registry}
-  alias RSyslog.Protocol.TCP
+  alias RSyslog.Protocol.{TCP, SSL}
 
   ##################
   ##### CLIENT #####
@@ -54,6 +63,24 @@ defmodule RSyslog.Writer do
   ##### SERVER #####
   ##################
 
+  def get_connect_fun(rfc) do
+    case rfc do
+      :rfc3164 ->
+        &TCP.connect/2
+      :rfc5424 ->
+        &SSL.connect/2
+    end
+  end
+
+  def get_send_fun(rfc) do
+    case rfc do
+      :rfc3164 ->
+        &TCP.send/4
+      :rfc5424 ->
+        &SSL.send/4
+    end
+  end
+
   @doc """
   Server callback to initalize a new writer process. We avoid connecting to the 
   host in `init/1` since it is a blocking call. We would rather let the calling process
@@ -62,7 +89,13 @@ defmodule RSyslog.Writer do
   ## Parameters
     - `state` - The inital state of the `Writer`. 
   """
-  def init(%Writer{host: host, port: port} = state) do
+  def init(%Writer{rfc: rfc, host: host, port: port} = state) do
+    # Cache the writer's connection and send functions in its state.
+    state = 
+      state  
+      |> Map.put(:connect_fun, get_connect_fun(rfc))
+      |> Map.put(:send_fun, get_send_fun(rfc))
+
     {:ok, state, {:continue, {host, port}}}
   end
 
@@ -74,9 +107,9 @@ defmodule RSyslog.Writer do
     - `{host, port}` - the host:port that the `Writer` tries to connect to.
     - `state` - the `Writer`'s current state.
   """
-  def handle_continue({host, port}, state) do
+  def handle_continue({host, port}, %Writer{connect_fun: connect} = state) do
     # Try to connect to the host
-    case TCP.connect(host, port) do
+    case connect.(host, port) do
       {:ok, socket} ->
         Logger.info("Connected to #{host}:#{port}")
 
@@ -114,8 +147,8 @@ defmodule RSyslog.Writer do
     - `{:send, message, facility, severity}` - the message to send.
     - `state` - the `Writer`'s current state.
   """
-  def handle_call({:send, message, facility, severity}, _, %{rfc: rfc, socket: socket} = state) do
-    case TCP.send(rfc, socket, message, facility, severity) do
+  def handle_call({:send, message, facility, severity}, _, %{send_fun: send, socket: socket} = state) do
+    case send.(socket, message, facility, severity) do
       :ok ->
         {:reply, :ok, state}
 
@@ -132,8 +165,8 @@ defmodule RSyslog.Writer do
     - `{:send, message, facility, severity}` - the message to send.
     - `state` - the `Writer`'s current state.
   """
-  def handle_cast({:send, message, facility, severity}, %{rfc: rfc, socket: socket} = state) do
-    case TCP.send(rfc, socket, message, facility, severity) do
+  def handle_cast({:send, message, facility, severity}, %{send_fun: send, socket: socket} = state) do
+    case send.(socket, message, facility, severity) do
       :ok ->
         {:noreply, state}
 

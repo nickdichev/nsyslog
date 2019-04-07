@@ -1,6 +1,5 @@
-defmodule RSyslog.Protocol.TCP do
-  alias RSyslog.Format.RFC3164
-  alias RSyslog.Protocol.RFC3164.Validate
+defmodule RSyslog.Protocol.SSL do
+  alias RSyslog.Format.RFC5424
 
   @doc """
   Connect to a given syslog host when given a binary address.
@@ -37,7 +36,7 @@ defmodule RSyslog.Protocol.TCP do
       send_timeout_close: true
     ]
 
-    :gen_tcp.connect(address, port, conn_opts)
+    :ssl.connect(address, port, conn_opts)
   end
 
   @doc """
@@ -50,12 +49,12 @@ defmodule RSyslog.Protocol.TCP do
     - :ok
   """
   def close(socket) do
-    :gen_tcp.close(socket)
+    :ssl.close(socket)
   end
 
   @doc """
   Send a message over a given `socket`. The message is formatted
-  according to RFC3154 before being sent.
+  according to RFC5424 before being sent.
 
   ## Parameters
     - `socket` - the socket which will be used to send the message.
@@ -68,13 +67,9 @@ defmodule RSyslog.Protocol.TCP do
     - {:error, reason}
   """
   def send(socket, msg, facility, severity) do
-    with {:ok, msg} <- Validate.initial_msg(msg),
-         {:ok, msg} <- RFC3164.format(msg, facility, severity),
-         {:ok, msg} <- Validate.packet_size(msg) do
-      :gen_tcp.send(socket, msg)
-    else
+    case RFC5424.format(msg, facility, severity) do
+      {:ok, msg} -> :ssl.send(socket, msg)
       {:error, reason} -> {:error, reason}
     end
   end
-
 end
