@@ -30,7 +30,8 @@ defmodule RSyslog.Protocol.TCP do
   """
   def connect(address, port) when is_integer(port) do
     conn_opts = [
-      active: false,
+      # Use active: :once to get a :tcp_closed message if the connection is closed
+      active: :once,
       keepalive: true,
       reuseaddr: true,
       send_timeout: 1000,

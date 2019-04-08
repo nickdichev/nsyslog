@@ -216,7 +216,7 @@ defmodule RSyslog.Writer do
   end
 
   @doc """
-  Server callback to handle the message we get when an SSL connection is closed. 
+  Server callback to handle the message we get when a SSL connection is closed. 
 
   ## Parameters
     - `{:ssl_closed, _}` - the connection down message.
@@ -225,6 +225,19 @@ defmodule RSyslog.Writer do
   def handle_info({:ssl_closed, _}, state) do
     debug_host = get_address_debug(state.host)
     Logger.warn("Lost connection to #{debug_host}:#{state.port}")
-    {:noreply, state}
+    {:noreply, state, {:continue, {state.host, state.port}}}
+  end
+
+  @doc """
+  Server callback to handle the message we get when a TCP connection is closed. 
+
+  ## Parameters
+    - `{:tcp_closed, _}` - the connection down message.
+    - `state` - The `Writer`'s current state.
+  """
+  def handle_info({:tcp_closed, _}, state) do
+    debug_host = get_address_debug(state.host)
+    Logger.warn("Lost connection to #{debug_host}:#{state.port}")
+    {:noreply, state, {:continue, {state.host, state.port}}}
   end
 end
