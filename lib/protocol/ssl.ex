@@ -29,7 +29,7 @@ defmodule RSyslog.Protocol.SSL do
   """
   def connect(address, port) when is_integer(port) do
     conn_opts = [
-      # Use active: false since :ssl's ssl_connection_sup handles the connection being closed
+      # Use active: false since :ssl's ssl_connection_sup monitors the connection
       active: false,
       keepalive: true,
       reuseaddr: true,
