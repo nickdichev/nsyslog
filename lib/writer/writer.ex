@@ -154,19 +154,19 @@ defmodule RSyslog.Writer do
       {:error, reason} ->
         # If we couldn't connect, get the current backoff state and increment it by one
         {backoff_state, new_state} = Map.get_and_update(state, :backoff, fn x -> {x, x + 1} end)
+        debug_host = get_address_debug(host)
 
         case Backoff.get(backoff_state) do
           # We timed out trying to connect to the host
           :timeout ->
-            debug_host = get_address_debug(host)
             Logger.warn("Timed out trying to connect to #{debug_host}:#{port}")
             # Exit with a normal reason :shutdown
             {:stop, :shutdown, new_state}
 
-          # We're still trying to backoff 
+          # Continue backing off
           backoff_sec ->
-            Logger.warn("Could not connect to #{host}:#{port} -- #{reason}.")
-            Logger.warn("Waiting #{backoff_sec} seconds.")
+            Logger.warn("Could not connect to #{debug_host}:#{port} -- #{reason}.")
+            Logger.warn("Waiting #{backoff_sec} seconds for #{debug_host}:#{port}.")
             Process.sleep(backoff_sec * 1000)
 
             {:noreply, new_state, {:continue, {host, port}}}
