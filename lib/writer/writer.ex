@@ -93,6 +93,23 @@ defmodule RSyslog.Writer do
   end
 
   @doc """
+  Get a formatted string for this `Writer`'s host address. 
+
+  ## Parameters
+    - `address`: the address to be formatted
+  """
+  def get_address_debug(address) do
+    case address do
+      {o1, o2, o3, o4} -> 
+        "#{o1}.#{o2}.#{o3}.#{o4}"
+      {o1, o2, o3, o4, o5, o6, o7, o8} ->
+        "#{o1}:#{o2}:#{o3}:#{o4}:#{o5}:#{o6}:#{o7}:#{o8}"
+      _ ->
+        address
+    end
+  end
+
+  @doc """
   Server callback to finish initializing a new writer process. We let the newly spawned process
   handle connecting to the syslog server instead of blocking the caller of init/1.
 
@@ -104,7 +121,8 @@ defmodule RSyslog.Writer do
     # Try to connect to the host
     case connect.(host, port) do
       {:ok, socket} ->
-        Logger.info("Connected to #{host}:#{port}")
+        debug_host = get_address_debug(host)
+        Logger.info("Connected to #{debug_host}:#{port}")
 
         # Insert the socket into the writer's state and reset the backoff state
         state =
@@ -119,10 +137,13 @@ defmodule RSyslog.Writer do
         {backoff_state, new_state} = Map.get_and_update(state, :backoff, fn x -> {x, x + 1} end)
 
         case Backoff.get(backoff_state) do
+          # We timed out trying to connect to the host
           :timeout ->
-            Logger.warn("Timed out trying to connect to #{host}:#{port}")
+            debug_host = get_address_debug(host)
+            Logger.warn("Timed out trying to connect to #{debug_host}:#{port}")
             {:stop, :timeout, new_state}
 
+          # We're still trying to backoff 
           backoff_sec ->
             Logger.warn("Could not connect to #{host}:#{port} -- #{reason}.")
             Logger.warn("Waiting #{backoff_sec} seconds.")
@@ -150,7 +171,8 @@ defmodule RSyslog.Writer do
         {:reply, :ok, state}
 
       {:error, reason} ->
-        Logger.warn("Could not send message to #{state.host}:#{state.port} -- #{reason}.")
+        debug_host = get_address_debug(state.host)
+        Logger.warn("Could not send message to #{debug_host}:#{state.port} -- #{reason}.")
         {:reply, {:error, reason}, state}
     end
   end
@@ -168,7 +190,8 @@ defmodule RSyslog.Writer do
         {:noreply, state}
 
       {:error, reason} ->
-        Logger.warn("Could not send message to #{state.host}:#{state.port} -- #{reason}.")
+        debug_host = get_address_debug(state.host)
+        Logger.warn("Could not send message to #{debug_host}:#{state.port} -- #{reason}.")
         {:noreply, state}
     end
   end
