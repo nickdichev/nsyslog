@@ -1,7 +1,8 @@
 defmodule RSyslog.Writer do
   defstruct [:rfc, :protocol, :host, :port, :aid, :socket, :connect_fun, :send_fun, backoff: 0]
 
-  use GenServer
+  # Only restart the Writer if it exists abnormally 
+  use GenServer, restart: :transient
   require Logger
 
   alias __MODULE__
@@ -100,9 +101,11 @@ defmodule RSyslog.Writer do
   """
   def get_address_debug(address) do
     case address do
+      # Format an ipv4 address
       {o1, o2, o3, o4} ->
         "#{o1}.#{o2}.#{o3}.#{o4}"
 
+      # Format an ipv6 address
       {o1, o2, o3, o4, o5, o6, o7, o8} ->
         "#{o1}:#{o2}:#{o3}:#{o4}:#{o5}:#{o6}:#{o7}:#{o8}"
 
@@ -143,7 +146,8 @@ defmodule RSyslog.Writer do
           :timeout ->
             debug_host = get_address_debug(host)
             Logger.warn("Timed out trying to connect to #{debug_host}:#{port}")
-            {:stop, :timeout, new_state}
+            # Exit with a normal reason :shutdown
+            {:stop, :shutdown, new_state}
 
           # We're still trying to backoff 
           backoff_sec ->
