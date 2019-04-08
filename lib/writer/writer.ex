@@ -201,4 +201,10 @@ defmodule RSyslog.Writer do
         {:noreply, state}
     end
   end
+
+  def handle_info({:ssl_closed, _}, state) do
+    debug_host = get_address_debug(state.host)
+    Logger.warn("Lost connection to #{debug_host}:#{state.port}")
+    {:noreply, state}
+  end
 end
