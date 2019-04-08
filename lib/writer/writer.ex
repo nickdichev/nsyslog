@@ -137,10 +137,10 @@ defmodule RSyslog.Writer do
     - `state` - the `Writer`'s current state.
   """
   def handle_continue({host, port}, %Writer{connect_fun: connect} = state) do
+    debug_host = get_address_debug(host)
     # Try to connect to the host
     case connect.(host, port) do
       {:ok, socket} ->
-        debug_host = get_address_debug(host)
         Logger.info("Connected to #{debug_host}:#{port}")
 
         # Insert the socket into the writer's state and reset the backoff state
@@ -154,7 +154,6 @@ defmodule RSyslog.Writer do
       {:error, reason} ->
         # If we couldn't connect, get the current backoff state and increment it by one
         {backoff_state, new_state} = Map.get_and_update(state, :backoff, fn x -> {x, x + 1} end)
-        debug_host = get_address_debug(host)
 
         case Backoff.get(backoff_state) do
           # We timed out trying to connect to the host
