@@ -73,7 +73,6 @@ defmodule RSyslog.Protocol.SSL do
         # Prepend the syslog message with the message length, as defined in RFC5425
         octect_len = IO.iodata_length(msg) |> to_string()
         msg = [octect_len, " ", msg]
-        IO.inspect(msg)
         :ssl.send(socket, msg)
 
       {:error, reason} ->
