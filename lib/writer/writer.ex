@@ -55,6 +55,13 @@ defmodule RSyslog.Writer do
   ##### SERVER #####
   ##################
 
+  @doc """
+  Helper function to get the connecting function this `Writer` should use.
+  The determination is based off the RFC this writer will be using. 
+
+  ## Parameters
+    - `rfc` - the RFC this writer is expected to adhere to.
+  """
   def get_connect_fun(rfc) do
     case rfc do
       :rfc3164 ->
@@ -65,6 +72,13 @@ defmodule RSyslog.Writer do
     end
   end
 
+  @doc """
+  Helper function to get the sending function this `Writer` should use.
+  The determination is based off the RFC this writer will be using. 
+
+  ## Parameters
+    - `rfc` - the RFC this writer is expected to adhere to.
+  """
   def get_send_fun(rfc) do
     case rfc do
       :rfc3164 ->
@@ -202,6 +216,13 @@ defmodule RSyslog.Writer do
     end
   end
 
+  @doc """
+  Server callback to handle the message we get when an SSL connection is closed. 
+
+  ## Parameters
+    - `{:ssl_closed, _}` - the connection down message.
+    - `state` - The `Writer`'s current state.
+  """
   def handle_info({:ssl_closed, _}, state) do
     debug_host = get_address_debug(state.host)
     Logger.warn("Lost connection to #{debug_host}:#{state.port}")
