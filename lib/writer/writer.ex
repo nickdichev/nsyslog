@@ -29,10 +29,10 @@ defmodule RSyslog.Writer do
     - `aid` - The account ID to send the message to. This value is looked up in the 
       `Rsyslog.Writer.Registry` to find the writer's PID. 
     - `message` - The message to send.
-    - `facility` - The facility level to use (default: 14).
-    - `severity` - The severity level to use (default: 6).
+    - `facility` - The facility level to use (default: :log_alert).
+    - `severity` - The severity level to use (default: :informational).
   """
-  def send(aid, message, facility \\ 14, severity \\ 6) do
+  def send(aid, message, facility \\ :log_alert, severity \\ :informational) do
     GenServer.call(Registry.via_tuple(aid), {:send, message, facility, severity})
   end
 
@@ -43,10 +43,10 @@ defmodule RSyslog.Writer do
     - `aid` - The account ID to send the message to. This value is looked up in the 
       `Rsyslog.Writer.Registry` to find the writer's PID. 
     - `message` - The message to send
-    - `facility` - The facility level to use (default: 14)
-    - `severity` - The severity level to use (default: 6)
+    - `facility` - The facility level to use (default: :log_alert).
+    - `severity` - The severity level to use (default: :informational).
   """
-  def send_async(aid, message, facility \\ 14, severity \\ 6) do
+  def send_async(aid, message, facility \\ :log_alert, severity \\ :informational) do
     GenServer.cast(Registry.via_tuple(aid), {:send, message, facility, severity})
   end
 
