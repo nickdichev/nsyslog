@@ -29,7 +29,7 @@ defmodule RSyslog.Format.Common.Priority.Facility.Test do
   test "line_printer" do
     assert Facility.get(:line_printer) == {:ok, 6}
   end
-  
+
   test "network_news" do
     assert Facility.get(:network_news) == {:ok, 7}
   end
@@ -99,6 +99,6 @@ defmodule RSyslog.Format.Common.Priority.Facility.Test do
   end
 
   test "unknown" do
-    assert Facility.get(:unknown) ==  {:error, :unknown_facility}
+    assert Facility.get(:unknown) == {:error, :unknown_facility}
   end
 end

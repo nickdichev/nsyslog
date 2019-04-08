@@ -35,9 +35,8 @@ defmodule RSyslog.Format.Common.Priority do
   """
   def get(facility, severity) when is_atom(facility) and is_atom(severity) do
     with {:ok, facility} <- Facility.get(facility),
-         {:ok, severity} <- Severity.get(severity) 
-    do
-          get(facility, severity)
+         {:ok, severity} <- Severity.get(severity) do
+      get(facility, severity)
     else
       {:error, reason} -> {:error, reason}
     end

@@ -1,4 +1,4 @@
 use Mix.Config
 
-config :rsyslog, 
+config :rsyslog,
   pemfile: "/etc/rsyslog/certs/domain.pem"

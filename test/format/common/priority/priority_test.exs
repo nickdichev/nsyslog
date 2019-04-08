@@ -38,7 +38,6 @@ defmodule RSyslog.Format.Common.Priority.Test do
     {:ok, pri} = Priority.get(13, 4)
     assert byte_size(pri) == 5
     assert pri == <<60, 49, 48, 56, 62>>
-
   end
 
   test "valid priority format atom, facility=user, severity=error" do
