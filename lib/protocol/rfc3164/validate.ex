@@ -5,7 +5,7 @@ defmodule RSyslog.Protocol.RFC3164.Validate do
   def initial_msg(_msg), do: {:error, :empty_message}
 
   def packet_size(msg) do
-    # We us IO.iodata_length since the Format functions return iolists
+    # We use IO.iodata_length since the Format functions return iolists
     case IO.iodata_length(msg) <= 1024 do
       true -> {:ok, msg}
       false -> {:error, :packet_size}
