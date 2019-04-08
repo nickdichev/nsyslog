@@ -100,10 +100,12 @@ defmodule RSyslog.Writer do
   """
   def get_address_debug(address) do
     case address do
-      {o1, o2, o3, o4} -> 
+      {o1, o2, o3, o4} ->
         "#{o1}.#{o2}.#{o3}.#{o4}"
+
       {o1, o2, o3, o4, o5, o6, o7, o8} ->
         "#{o1}:#{o2}:#{o3}:#{o4}:#{o5}:#{o6}:#{o7}:#{o8}"
+
       _ ->
         address
     end
