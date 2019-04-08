@@ -28,13 +28,30 @@ defmodule RSyslog.Format.Common.Priority.Test do
     end
   end
 
-  test "valid priority format" do
+  test "valid priority format, facility=user, severity=error" do
     {:ok, pri} = Priority.get(1, 3)
     assert byte_size(pri) == 4
     assert pri == <<60, 49, 49, 62>>
+  end
 
+  test "valid priority format, facility=log_audit, severity=warning" do
     {:ok, pri} = Priority.get(13, 4)
     assert byte_size(pri) == 5
     assert pri == <<60, 49, 48, 56, 62>>
+
+  end
+
+  test "valid priority format atom, facility=user, severity=error" do
+    {:ok, pri} = Priority.get(:user, :error)
+    assert byte_size(pri) == 4
+    assert pri == <<60, 49, 49, 62>>
+  end
+
+  test "invalid priority format atom (facility)" do
+    assert Priority.get(:unknown, :error) == {:error, :unknown_facility}
+  end
+
+  test "invalid priority format atom (severity)" do
+    assert Priority.get(:kernel, :unknown) == {:error, :unknown_severity}
   end
 end
