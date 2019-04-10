@@ -110,5 +110,4 @@ defmodule RSyslog.Format.Common.Priority.Facility.Test do
     assert Facility.validate(-1) == {:error, :facility_level}
     assert Facility.validate(24) == {:error, :facility_level}
   end
-
 end
