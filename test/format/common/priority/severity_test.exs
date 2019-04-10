@@ -37,4 +37,13 @@ defmodule RSyslog.Format.Common.Priority.Severity.Test do
   test "unknown" do
     assert Severity.get(:unknown) == {:error, :unknown_severity}
   end
+  
+  test "valid level" do
+    assert Severity.validate(3) == :ok
+  end
+
+  test "invalid level" do
+    assert Severity.validate(-1) == {:error, :severity_level}
+    assert Severity.validate(8) == {:error, :severity_level}
+  end
 end

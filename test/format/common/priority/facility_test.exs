@@ -101,4 +101,14 @@ defmodule RSyslog.Format.Common.Priority.Facility.Test do
   test "unknown" do
     assert Facility.get(:unknown) == {:error, :unknown_facility}
   end
+
+  test "valid level" do
+    assert Facility.validate(13) == :ok
+  end
+
+  test "invalid level" do
+    assert Facility.validate(-1) == {:error, :facility_level}
+    assert Facility.validate(24) == {:error, :facility_level}
+  end
+
 end

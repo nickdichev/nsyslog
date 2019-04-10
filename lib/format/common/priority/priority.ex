@@ -4,15 +4,9 @@ defmodule RSyslog.Format.Common.Priority do
 
   alias RSyslog.Format.Common.Priority.{Severity, Facility}
 
-  defp validate_facility(facility) when facility >= 0 and facility <= 23, do: :ok
-  defp validate_facility(_facility), do: {:error, :facility_level}
-
-  defp validate_severity(severity) when severity >= 0 and severity <= 7, do: :ok
-  defp validate_severity(_severity), do: {:error, :severity_level}
-
-  defp validate_levels(facility, severity) do
-    with :ok <- validate_facility(facility),
-         :ok <- validate_severity(severity) do
+  defp validate(facility, severity) do
+    with :ok <- Facility.validate(facility),
+         :ok <- Severity.validate(severity) do
       :ok
     else
       {:error, reason} -> {:error, reason}
@@ -55,7 +49,7 @@ defmodule RSyslog.Format.Common.Priority do
     - {:error, reason}
   """
   def get(facility, severity) when is_integer(facility) and is_integer(facility) do
-    case validate_levels(facility, severity) do
+    case validate(facility, severity) do
       :ok ->
         priority =
           calculate_priority(facility, severity)

@@ -8,4 +8,7 @@ defmodule RSyslog.Format.Common.Priority.Severity do
   def get(:informational), do: {:ok, 6}
   def get(:debug), do: {:ok, 7}
   def get(_), do: {:error, :unknown_severity}
+
+  def validate(severity) when severity >= 0 and severity <= 7, do: :ok
+  def validate(_severity), do: {:error, :severity_level}
 end

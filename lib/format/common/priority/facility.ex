@@ -24,4 +24,7 @@ defmodule RSyslog.Format.Common.Priority.Facility do
   def get(:local6), do: {:ok, 22}
   def get(:local7), do: {:ok, 23}
   def get(_), do: {:error, :unknown_facility}
+
+  def validate(facility) when facility >= 0 and facility <= 23, do: :ok
+  def validate(_facility), do: {:error, :facility_level}
 end
