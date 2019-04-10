@@ -55,10 +55,7 @@ defmodule RSyslog.Format.Common.Priority do
           calculate_priority(facility, severity)
           |> Integer.to_string()
 
-        priority =
-          <<@lt_ascii::size(8)>> <>
-            priority <>
-            <<@gt_ascii::size(8)>>
+        priority = [@lt_ascii, priority, @gt_ascii]
 
         {:ok, priority}
 

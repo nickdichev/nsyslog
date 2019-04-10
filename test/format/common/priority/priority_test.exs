@@ -22,7 +22,7 @@ defmodule RSyslog.Format.Common.Priority.Test do
     for facility <- 1..23 do
       for severity <- 1..7 do
         priority = (facility * 8 + severity) |> Integer.to_string()
-        expected = "<" <> priority <> ">"
+        expected = [60, priority, 62]
         assert Priority.get(facility, severity) == {:ok, expected}
       end
     end
@@ -30,20 +30,20 @@ defmodule RSyslog.Format.Common.Priority.Test do
 
   test "valid priority format, facility=user, severity=error" do
     {:ok, pri} = Priority.get(1, 3)
-    assert byte_size(pri) == 4
-    assert pri == <<60, 49, 49, 62>>
+    assert IO.iodata_length(pri) == 4
+    assert pri == [60, "11", 62]
   end
 
   test "valid priority format, facility=log_audit, severity=warning" do
     {:ok, pri} = Priority.get(13, 4)
-    assert byte_size(pri) == 5
-    assert pri == <<60, 49, 48, 56, 62>>
+    assert IO.iodata_length(pri) == 5
+    assert pri == [60, "108", 62]
   end
 
   test "valid priority format atom, facility=user, severity=error" do
     {:ok, pri} = Priority.get(:user, :error)
-    assert byte_size(pri) == 4
-    assert pri == <<60, 49, 49, 62>>
+    assert IO.iodata_length(pri) == 4
+    assert pri == [60, "11", 62]
   end
 
   test "invalid priority format atom (facility)" do
