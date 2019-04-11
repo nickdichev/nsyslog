@@ -1,11 +1,10 @@
 alias NSyslog.Writer
 alias NSyslog.Writer.Supervisor
 
-Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "ESS1", host: "localhost", port: 514})
-Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "ESS2", host: "localhost", port: 514})
-Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "ESS3", host: "localhost", port: 514})
+Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "1", host: "localhost", port: 514})
+Supervisor.create_writer(%Writer{rfc: :rfc5424, protocol: :tcp, aid: "2", host: "localhost", port: 6514})
 
-possible_aids = ["ESS1", "ESS2", "ESS3"]
+possible_aids = ["1", "2"]
 
 num_messages = 
   case Enum.at(System.argv, 0) do
@@ -25,4 +24,10 @@ Task.async_stream(aid_list, Writer, :send, ["hello!"])
 end_time = System.monotonic_time(:second)
 delta = end_time - start_time
 
-IO.puts("Took #{delta} seconds to send #{num_messages} messages.")
+seconds = 
+  case delta > 1 do
+    true -> "seconds"
+    false -> "second"
+  end
+
+IO.puts("Took #{delta} #{seconds} to send #{num_messages} messages.")
