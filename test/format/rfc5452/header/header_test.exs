@@ -1,8 +1,8 @@
-defmodule RSyslog.Format.RFC5424.Header.Test do
+defmodule NSyslog.Format.RFC5424.Header.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Format.RFC5424.Header
-  alias RSyslog.Format.Common.{Priority, ProcessID}
-  import RSyslog.TestHelpers
+  alias NSyslog.Format.RFC5424.Header
+  alias NSyslog.Format.Common.{Priority, ProcessID}
+  import NSyslog.TestHelpers
 
   test "gets header" do
     {:ok, pri} = Priority.get(14, 6)

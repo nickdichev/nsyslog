@@ -37,7 +37,7 @@ end
 environment :prod do
   set include_erts: true
   set include_src: false
-  set cookie: File.read!("/etc/rsyslog/cookie/prod_cookie") |> String.to_atom()
+  set cookie: File.read!("/etc/nsyslog/cookie/prod_cookie") |> String.to_atom()
   set vm_args: "rel/vm.args"
 end
 
@@ -46,8 +46,8 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :rsyslog do
-  set version: current_version(:rsyslog)
+release :nsyslog do
+  set version: current_version(:nsyslog)
   set applications: [
     :runtime_tools
   ]

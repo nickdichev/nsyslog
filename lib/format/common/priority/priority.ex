@@ -1,8 +1,8 @@
-defmodule RSyslog.Format.Common.Priority do
+defmodule NSyslog.Format.Common.Priority do
   @lt_ascii 60
   @gt_ascii 62
 
-  alias RSyslog.Format.Common.Priority.{Severity, Facility}
+  alias NSyslog.Format.Common.Priority.{Severity, Facility}
 
   defp validate(facility, severity) do
     with :ok <- Facility.validate(facility),

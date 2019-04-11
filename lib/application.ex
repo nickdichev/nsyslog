@@ -1,10 +1,10 @@
-defmodule RSyslog.Application do
+defmodule NSyslog.Application do
   use Application
 
   def start(_type, _args) do
     children = [
-      RSyslog.Writer.Registry,
-      RSyslog.Writer.Supervisor
+      NSyslog.Writer.Registry,
+      NSyslog.Writer.Supervisor
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)

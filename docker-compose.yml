@@ -15,14 +15,14 @@ services:
       - syslog-ng-net
     command: "--no-caps"
 
-  rsyslog:
-    image: rsyslog:latest
-    container_name: rsyslog
+  nsyslog:
+    image: nsyslog:latest
+    container_name: nsyslog
     build:
       context: "${PWD}"
-      dockerfile: "${PWD}/docker/rsyslog/Dockerfile"
+      dockerfile: "${PWD}/docker/nsyslog/Dockerfile"
     volumes: 
-      - "${PWD}/docker/rsyslog/certs:/etc/rsyslog/certs:ro"
+      - "${PWD}/docker/nsyslog/certs:/etc/nsyslog/certs:ro"
     networks:
       - syslog-ng-net
 

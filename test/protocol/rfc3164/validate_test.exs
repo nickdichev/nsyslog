@@ -1,6 +1,6 @@
-defmodule RSyslog.Protocol.RFC3164.Validate.Test do
+defmodule NSyslog.Protocol.RFC3164.Validate.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Protocol.RFC3164.Validate
+  alias NSyslog.Protocol.RFC3164.Validate
 
   test "valid initial message" do
     assert Validate.initial_msg("test message") == {:ok, "test message"}
@@ -16,12 +16,12 @@ defmodule RSyslog.Protocol.RFC3164.Validate.Test do
   end
 
   test "valid packet size" do
-    packet = "<14>Mar 25 02:48:44 spooky-mac rsyslog[0.131.0]: test message"
+    packet = "<14>Mar 25 02:48:44 spooky-mac nsyslog[0.131.0]: test message"
     assert Validate.packet_size(packet) == {:ok, packet}
   end
 
   test "invalid packet size" do
-    packet = "<14>Mar 25 02:48:44 spooky-mac rsyslog[0.131.0]: " <> String.duplicate("a", 1000)
+    packet = "<14>Mar 25 02:48:44 spooky-mac nsyslog[0.131.0]: " <> String.duplicate("a", 1000)
     assert Validate.packet_size(packet) == {:error, :packet_size}
   end
 end

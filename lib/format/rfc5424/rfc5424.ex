@@ -1,5 +1,5 @@
-defmodule RSyslog.Format.RFC5424 do
-  alias RSyslog.Format.RFC5424.{Header, StructuredData, Message}
+defmodule NSyslog.Format.RFC5424 do
+  alias NSyslog.Format.RFC5424.{Header, StructuredData, Message}
 
   @doc """
   Format a message according to RFC5424. The default facility level used is 14 (log alert)

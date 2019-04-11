@@ -1,7 +1,7 @@
-defmodule RSyslog.Writer.Supervisor do
+defmodule NSyslog.Writer.Supervisor do
   use DynamicSupervisor
 
-  alias RSyslog.Writer
+  alias NSyslog.Writer
 
   def start_link(args) do
     DynamicSupervisor.start_link(__MODULE__, args, name: __MODULE__)

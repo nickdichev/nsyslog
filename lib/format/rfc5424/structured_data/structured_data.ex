@@ -1,4 +1,4 @@
-defmodule RSyslog.Format.RFC5424.StructuredData do
+defmodule NSyslog.Format.RFC5424.StructuredData do
   @doc """
   Generate structure data. For now, we just return NILVALUE.
   """

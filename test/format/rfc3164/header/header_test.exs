@@ -1,6 +1,6 @@
-defmodule RSyslog.Format.RFC3164.Header.Test do
+defmodule NSyslog.Format.RFC3164.Header.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Format.RFC3164.Header
+  alias NSyslog.Format.RFC3164.Header
 
   test "gets header" do
     {:ok, host} = :inet.gethostname()

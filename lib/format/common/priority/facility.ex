@@ -1,4 +1,4 @@
-defmodule RSyslog.Format.Common.Priority.Facility do
+defmodule NSyslog.Format.Common.Priority.Facility do
   def get(:kernel), do: {:ok, 0}
   def get(:user), do: {:ok, 1}
   def get(:mail), do: {:ok, 2}

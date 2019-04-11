@@ -1,5 +1,5 @@
 ExUnit.start()
 
-defmodule RSyslog.TestHelpers do
-  def get_app(), do: "rsyslog"
+defmodule NSyslog.TestHelpers do
+  def get_app(), do: "nsyslog"
 end

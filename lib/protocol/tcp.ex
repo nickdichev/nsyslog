@@ -1,6 +1,6 @@
-defmodule RSyslog.Protocol.TCP do
-  alias RSyslog.Format.RFC3164
-  alias RSyslog.Protocol.RFC3164.Validate
+defmodule NSyslog.Protocol.TCP do
+  alias NSyslog.Format.RFC3164
+  alias NSyslog.Protocol.RFC3164.Validate
 
   @doc """
   Connect to a given syslog host when given a binary address.

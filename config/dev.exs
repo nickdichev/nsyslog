@@ -1,4 +1,4 @@
 use Mix.Config
 
-config :rsyslog,
-  pemfile: "/Users/ndichev/Workspace/elixir-lab/rsyslog/docker/rsyslog/certs/domain.pem"
+config :nsyslog,
+  pemfile: "/Users/ndichev/Workspace/elixir-lab/nsyslog/docker/nsyslog/certs/domain.pem"

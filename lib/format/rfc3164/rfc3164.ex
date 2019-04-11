@@ -1,6 +1,6 @@
-defmodule RSyslog.Format.RFC3164 do
-  alias RSyslog.Format.Common.Priority
-  alias RSyslog.Format.RFC3164.{Header, Message}
+defmodule NSyslog.Format.RFC3164 do
+  alias NSyslog.Format.Common.Priority
+  alias NSyslog.Format.RFC3164.{Header, Message}
 
   @doc """
   Format a message according to RFC3164. The default facility level used is 14 (log alert)

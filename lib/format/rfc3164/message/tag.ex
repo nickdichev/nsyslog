@@ -1,5 +1,5 @@
-defmodule RSyslog.Format.RFC3164.Message.Tag do
-  alias RSyslog.Format.Common.{ProcessID, AppName}
+defmodule NSyslog.Format.RFC3164.Message.Tag do
+  alias NSyslog.Format.Common.{ProcessID, AppName}
 
   @doc """
   Generate the tag for the syslog message.

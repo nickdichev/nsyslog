@@ -1,4 +1,4 @@
-defmodule RSyslog.Writer do
+defmodule NSyslog.Writer do
   defstruct [:rfc, :protocol, :host, :port, :aid, :socket, :connect_fun, :send_fun, backoff: 0]
 
   # Only restart the Writer if it exists abnormally 
@@ -6,8 +6,8 @@ defmodule RSyslog.Writer do
   require Logger
 
   alias __MODULE__
-  alias RSyslog.Writer.{Backoff, Registry}
-  alias RSyslog.Protocol.{TCP, SSL}
+  alias NSyslog.Writer.{Backoff, Registry}
+  alias NSyslog.Protocol.{TCP, SSL}
 
   ##################
   ##### CLIENT #####

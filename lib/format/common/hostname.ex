@@ -1,4 +1,4 @@
-defmodule RSyslog.Format.Common.Hostname do
+defmodule NSyslog.Format.Common.Hostname do
   @doc """
   Get the hostname of the system sending the syslog message.
 

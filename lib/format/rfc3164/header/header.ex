@@ -1,6 +1,6 @@
-defmodule RSyslog.Format.RFC3164.Header do
-  alias RSyslog.Format.RFC3164.Header.Timestamp
-  alias RSyslog.Format.Common.Hostname
+defmodule NSyslog.Format.RFC3164.Header do
+  alias NSyslog.Format.RFC3164.Header.Timestamp
+  alias NSyslog.Format.Common.Hostname
 
   @doc """
   Get the header data according to RFC3164. The header contains two fields: the timestamp and the

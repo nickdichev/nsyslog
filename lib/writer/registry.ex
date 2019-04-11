@@ -1,4 +1,4 @@
-defmodule RSyslog.Writer.Registry do
+defmodule NSyslog.Writer.Registry do
   @doc """
   Function called by `child_spec/1` to start the Registry
   """
@@ -7,7 +7,7 @@ defmodule RSyslog.Writer.Registry do
   end
 
   @doc """
-  Callback the `RSyslog.Application` supervisor calls to start the writer registry.
+  Callback the `NSyslog.Application` supervisor calls to start the writer registry.
   """
   def child_spec(_args) do
     Supervisor.child_spec(

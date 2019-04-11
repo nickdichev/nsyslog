@@ -1,7 +1,7 @@
-defmodule RSyslog.Format.Common.AppName.Test do
+defmodule NSyslog.Format.Common.AppName.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Format.Common.AppName
-  import RSyslog.TestHelpers
+  alias NSyslog.Format.Common.AppName
+  import NSyslog.TestHelpers
 
   test "gets app name" do
     assert get_app() == AppName.get()

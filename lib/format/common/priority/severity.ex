@@ -1,4 +1,4 @@
-defmodule RSyslog.Format.Common.Priority.Severity do
+defmodule NSyslog.Format.Common.Priority.Severity do
   def get(:emergency), do: {:ok, 0}
   def get(:alert), do: {:ok, 1}
   def get(:critical), do: {:ok, 2}

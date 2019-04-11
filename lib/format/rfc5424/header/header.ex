@@ -1,6 +1,6 @@
-defmodule RSyslog.Format.RFC5424.Header do
-  alias RSyslog.Format.Common.{Priority, Hostname, AppName, ProcessID}
-  alias RSyslog.Format.RFC5424.Header.Timestamp
+defmodule NSyslog.Format.RFC5424.Header do
+  alias NSyslog.Format.Common.{Priority, Hostname, AppName, ProcessID}
+  alias NSyslog.Format.RFC5424.Header.Timestamp
 
   @syslog_version 1
 

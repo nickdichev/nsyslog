@@ -1,6 +1,6 @@
-defmodule RSyslog.Format.Common.Priority.Facility.Test do
+defmodule NSyslog.Format.Common.Priority.Facility.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Format.Common.Priority.Facility
+  alias NSyslog.Format.Common.Priority.Facility
 
   test "kernel" do
     assert Facility.get(:kernel) == {:ok, 0}

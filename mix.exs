@@ -3,7 +3,7 @@ defmodule Rsyslog.MixProject do
 
   def project do
     [
-      app: :rsyslog,
+      app: :nsyslog,
       version: "0.1.0",
       elixir: "~> 1.8.1",
       start_permanent: Mix.env() == :prod,
@@ -14,7 +14,7 @@ defmodule Rsyslog.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {RSyslog.Application, []},
+      mod: {NSyslog.Application, []},
       applications: [:ssl],
       extra_applications: [:logger]
     ]

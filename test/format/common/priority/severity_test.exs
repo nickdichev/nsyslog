@@ -1,6 +1,6 @@
-defmodule RSyslog.Format.Common.Priority.Severity.Test do
+defmodule NSyslog.Format.Common.Priority.Severity.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Format.Common.Priority.Severity
+  alias NSyslog.Format.Common.Priority.Severity
 
   test "emergency" do
     assert Severity.get(:emergency) == {:ok, 0}

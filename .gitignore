@@ -20,11 +20,11 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-rsyslog-*.tar
+nsyslog-*.tar
 
 # Ignore test certs
 /docker/syslog-ng/certs/
-/docker/rsyslog/certs/
+/docker/nsyslog/certs/
 
 # Ignore prod cookie
-/docker/rsyslog/cookie/
+/docker/nsyslog/cookie/

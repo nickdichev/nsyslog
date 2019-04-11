@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :rsyslog, key: :value
+#     config :nsyslog, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:rsyslog, :key)
+#     Application.get_env(:nsyslog, :key)
 #
 # You can also configure a third-party app:
 #

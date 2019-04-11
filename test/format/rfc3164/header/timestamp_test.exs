@@ -1,6 +1,6 @@
-defmodule RSyslog.Format.RFC3164.Header.Timestamp.Test do
+defmodule NSyslog.Format.RFC3164.Header.Timestamp.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Format.RFC3164.Header.Timestamp
+  alias NSyslog.Format.RFC3164.Header.Timestamp
 
   test "gets timestamp" do
     dt = %DateTime{

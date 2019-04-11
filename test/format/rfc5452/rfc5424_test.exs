@@ -1,8 +1,8 @@
-defmodule RSyslog.RFC5424.Format.Test do
+defmodule NSyslog.RFC5424.Format.Test do
   use ExUnit.Case, async: true
-  alias RSyslog.Format.RFC5424, as: Format
-  alias RSyslog.Format.Common.{Priority, ProcessID}
-  import RSyslog.TestHelpers
+  alias NSyslog.Format.RFC5424, as: Format
+  alias NSyslog.Format.Common.{Priority, ProcessID}
+  import NSyslog.TestHelpers
 
   test "errors on invalid facility" do
     assert Format.format("test message", -1, 3) == {:error, :facility_level}

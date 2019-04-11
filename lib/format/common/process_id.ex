@@ -1,4 +1,4 @@
-defmodule RSyslog.Format.Common.ProcessID do
+defmodule NSyslog.Format.Common.ProcessID do
   def pid_to_binary(pid) when is_pid(pid) do
     pid
     |> :erlang.pid_to_list()

@@ -1,5 +1,5 @@
-defmodule RSyslog.Protocol.SSL do
-  alias RSyslog.Format.RFC5424
+defmodule NSyslog.Protocol.SSL do
+  alias NSyslog.Format.RFC5424
 
   @doc """
   Connect to a given syslog host when given a binary address.
@@ -35,7 +35,7 @@ defmodule RSyslog.Protocol.SSL do
       reuseaddr: true,
       send_timeout: 1000,
       send_timeout_close: true,
-      certfile: Application.get_env(:rsyslog, :pemfile)
+      certfile: Application.get_env(:nsyslog, :pemfile)
     ]
 
     :ssl.connect(address, port, conn_opts)

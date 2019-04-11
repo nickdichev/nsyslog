@@ -1,5 +1,5 @@
-alias RSyslog.Writer
-alias RSyslog.Writer.Supervisor
+alias NSyslog.Writer
+alias NSyslog.Writer.Supervisor
 
 Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "ESS1", host: "localhost", port: 514})
 Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "ESS2", host: "localhost", port: 514})

@@ -1,4 +1,4 @@
-defmodule RSyslog.Writer.Backoff do
+defmodule NSyslog.Writer.Backoff do
   def get(0), do: 0
   def get(1), do: 1
   def get(2), do: 2
