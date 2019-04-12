@@ -118,7 +118,7 @@ defmodule NSyslog.Writer do
     end
   end
 
-  def handle_send(message, facility, severity, %{send_fun: send, socket: socket}) do
+  def handle_send(message, facility, severity, %{send_fun: send, socket: socket} = state) do
     case send.(socket, message, facility, severity) do
       :ok ->
         {:reply, :ok, state}
@@ -148,7 +148,7 @@ defmodule NSyslog.Writer do
     - `{:send, message, facility, severity}` - the message to send.
     - `state` - the `Writer`'s current state.
   """
-  def handle_cast({:send, message, facility, severity}, %{send_fun: send, socket: socket} = state) do
+  def handle_cast({:send, message, facility, severity}, state) do
     handle_send(message, facility, severity, state)
   end
 
