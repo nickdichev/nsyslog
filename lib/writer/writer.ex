@@ -6,8 +6,7 @@ defmodule NSyslog.Writer do
   require Logger
 
   alias __MODULE__
-  alias NSyslog.Writer.{Backoff, Registry}
-  alias NSyslog.Protocol.{TCP, SSL}
+  alias NSyslog.Writer.{Backoff, Registry, Helpers}
 
   ##################
   ##### CLIENT #####
@@ -56,40 +55,6 @@ defmodule NSyslog.Writer do
   ##################
 
   @doc """
-  Helper function to get the connecting function this `Writer` should use.
-  The determination is based off the RFC this writer will be using. 
-
-  ## Parameters
-    - `rfc` - the RFC this writer is expected to adhere to.
-  """
-  def get_connect_fun(rfc) do
-    case rfc do
-      :rfc3164 ->
-        &TCP.connect/2
-
-      :rfc5424 ->
-        &SSL.connect/2
-    end
-  end
-
-  @doc """
-  Helper function to get the sending function this `Writer` should use.
-  The determination is based off the RFC this writer will be using. 
-
-  ## Parameters
-    - `rfc` - the RFC this writer is expected to adhere to.
-  """
-  def get_send_fun(rfc) do
-    case rfc do
-      :rfc3164 ->
-        &TCP.send/4
-
-      :rfc5424 ->
-        &SSL.send/4
-    end
-  end
-
-  @doc """
   Server callback to initalize a new writer process. We avoid connecting to the 
   host in `init/1` since it is a blocking call. We would rather let the calling process
   continue on, while the newly spawned process tries to connect to the syslog server.
@@ -101,32 +66,12 @@ defmodule NSyslog.Writer do
     # Cache the writer's connection and send functions in its state.
     state =
       state
-      |> Map.put(:connect_fun, get_connect_fun(rfc))
-      |> Map.put(:send_fun, get_send_fun(rfc))
+      |> Map.put(:connect_fun, Helpers.get_connect_fun(rfc))
+      |> Map.put(:send_fun, Helpers.get_send_fun(rfc))
 
     {:ok, state, {:continue, {host, port}}}
   end
 
-  @doc """
-  Get a formatted string for this `Writer`'s host address. 
-
-  ## Parameters
-    - `address`: the address to be formatted
-  """
-  def get_address_debug(address) do
-    case address do
-      # Format an ipv4 address
-      {o1, o2, o3, o4} ->
-        "#{o1}.#{o2}.#{o3}.#{o4}"
-
-      # Format an ipv6 address
-      {o1, o2, o3, o4, o5, o6, o7, o8} ->
-        "#{o1}:#{o2}:#{o3}:#{o4}:#{o5}:#{o6}:#{o7}:#{o8}"
-
-      _ ->
-        address
-    end
-  end
 
   @doc """
   Server callback to finish initializing a new writer process. We let the newly spawned process
@@ -137,7 +82,7 @@ defmodule NSyslog.Writer do
     - `state` - the `Writer`'s current state.
   """
   def handle_continue({host, port}, %Writer{connect_fun: connect} = state) do
-    debug_host = get_address_debug(host)
+    debug_host = Helpers.get_address_debug(host)
     # Try to connect to the host
     case connect.(host, port) do
       {:ok, socket} ->
@@ -190,7 +135,7 @@ defmodule NSyslog.Writer do
         {:reply, :ok, state}
 
       {:error, reason} ->
-        debug_host = get_address_debug(state.host)
+        debug_host = Helpers.get_address_debug(state.host)
         Logger.warn("Could not send message to #{debug_host}:#{state.port} -- #{reason}.")
         {:reply, {:error, reason}, state}
     end
@@ -209,7 +154,7 @@ defmodule NSyslog.Writer do
         {:noreply, state}
 
       {:error, reason} ->
-        debug_host = get_address_debug(state.host)
+        debug_host = Helpers.get_address_debug(state.host)
         Logger.warn("Could not send message to #{debug_host}:#{state.port} -- #{reason}.")
         {:noreply, state}
     end
@@ -223,7 +168,7 @@ defmodule NSyslog.Writer do
     - `state` - The `Writer`'s current state.
   """
   def handle_info({:ssl_closed, _}, state) do
-    debug_host = get_address_debug(state.host)
+    debug_host = Helpers.get_address_debug(state.host)
     Logger.warn("Lost connection to #{debug_host}:#{state.port}")
     {:noreply, state, {:continue, {state.host, state.port}}}
   end
@@ -236,7 +181,7 @@ defmodule NSyslog.Writer do
     - `state` - The `Writer`'s current state.
   """
   def handle_info({:tcp_closed, _}, state) do
-    debug_host = get_address_debug(state.host)
+    debug_host = Helpers.get_address_debug(state.host)
     Logger.warn("Lost connection to #{debug_host}:#{state.port}")
     {:noreply, state, {:continue, {state.host, state.port}}}
   end
