@@ -118,18 +118,7 @@ defmodule NSyslog.Writer do
     end
   end
 
-  @doc """
-  Sever callback to send a message synchronously.
-
-  ## Parameters
-    - `{:send, message, facility, severity}` - the message to send.
-    - `state` - the `Writer`'s current state.
-  """
-  def handle_call(
-        {:send, message, facility, severity},
-        _,
-        %{send_fun: send, socket: socket} = state
-      ) do
+  def handle_send(message, facility, severity, %{send_fun: send, socket: socket}) do
     case send.(socket, message, facility, severity) do
       :ok ->
         {:reply, :ok, state}
@@ -142,6 +131,17 @@ defmodule NSyslog.Writer do
   end
 
   @doc """
+  Sever callback to send a message synchronously.
+
+  ## Parameters
+    - `{:send, message, facility, severity}` - the message to send.
+    - `state` - the `Writer`'s current state.
+  """
+  def handle_call({:send, message, facility, severity}, _, state) do
+    handle_send(message, facility, severity, state)
+  end
+
+  @doc """
   Sever callback to send a message asynchronously.
 
   ## Parameters
@@ -149,15 +149,7 @@ defmodule NSyslog.Writer do
     - `state` - the `Writer`'s current state.
   """
   def handle_cast({:send, message, facility, severity}, %{send_fun: send, socket: socket} = state) do
-    case send.(socket, message, facility, severity) do
-      :ok ->
-        {:noreply, state}
-
-      {:error, reason} ->
-        debug_host = Helpers.get_address_debug(state.host)
-        Logger.warn("Could not send message to #{debug_host}:#{state.port} -- #{reason}.")
-        {:noreply, state}
-    end
+    handle_send(message, facility, severity, state)
   end
 
   @doc """
