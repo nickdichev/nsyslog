@@ -177,4 +177,16 @@ defmodule NSyslog.Writer do
     Logger.warn("Lost connection to #{debug_host}:#{state.port}")
     {:noreply, state, {:continue, {state.host, state.port}}}
   end
+
+  @doc """
+  Server callback to handle an unknown message.
+
+  ## Parameters
+    - `msg` - the mystery message.
+    - `state` - the `Writer`'s current state.
+  """
+  def handle_info(msg, state) do
+    Logger.warn("Got an unexpected message: #{msg}")
+    {:noreply, state}
+  end
 end
