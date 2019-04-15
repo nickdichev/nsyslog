@@ -8,13 +8,9 @@ An example application that uses this library can be found [here](https://github
 
 ## Setup
 
-For RFC5424 destinations, SSL is required. For testing a self-signed certificate will suffice. Update the path to your certificate in the following files:
+For RFC5424 destinations, SSL is required. For testing a self-signed certificate will suffice. Update the path to your certificate in the the config files in `config/`.
 
-* `config/dev.exs`
-
-The default path in `prod.exs` is populated during a Docker build. More on this in a following section.
-
-Additionally, if you plan to use the `syslog-ng` container provided in this repository for testing you should create a self-signed certificate and drop it in `docker/syslog-ng/certs`.
+Additionally, if you plan to use the `syslog-ng` container provided in this repository for testing you should create a self-signed certificate and drop it in `docker/syslog-ng/certs`. There is more information on this in the "Development" section of this document.
 
 ## Usage
 
