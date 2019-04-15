@@ -4,6 +4,8 @@
 
 The goal of this project is to send arbitrary messages to a dynamic number of syslog servers. Currently, the project supports RFC3164 and RFC5424 formatted messages and destinations. However, the only supported protocols are TCP (for RFC3164 messages/destinations) or SSL (for RFC5424 messages/destinations).
 
+An example application that uses this library can be found [here](https://github.com/nickdichev/kafka_syslog).
+
 ## Setup
 
 For RFC5424 destinations, SSL is required. For testing a self-signed certificate will suffice. Update the path to your certificate in the following files:
