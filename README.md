@@ -9,7 +9,6 @@ The goal of this project is to send arbitrary messages to a dynamic number of sy
 For RFC5424 destinations, SSL is required. For testing a self-signed certificate will suffice. Update the path to your certificate in the following files:
 
 * `config/dev.exs`
-* `config/prod.exs`
 
 The default path in `prod.exs` is populated during a Docker build. More on this in a following section.
 
@@ -46,13 +45,24 @@ The `:aid` field is used as a lookup key in a registry to determine which `NSysl
 
 ## Development
 
-A `syslog-ng` container for testing can be created with `docker-compose`:
+A `syslog-ng` container for testing can be created with `docker-compose`. However, for development, you should provide a self-signed certificate which will be included in the container. Add the following files:
+
+```bash
+docker/syslog-ng/certs/domain.crt
+docker/syslog-ng/certs/domain.key
+```
+
+You can use a different name for the cert files, however, then you will have to modify `docker/syslog-ng/syslog-ng.conf`.
+
+Finally, the syslog-ng container can be launched:
 
 ```bash
 nsyslog/ $ docker-compose up -d syslog-ng
 ```
 
-As previously seen, the application can be run with `iex -S mix` for development. The unit test suite can be run with `mix test`.
+As previously seen, the application can be run with `iex -S mix` for development. 
+
+The unit test suite can be run with `mix test`.
 
 ## Benchmark
 
