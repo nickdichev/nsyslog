@@ -25,4 +25,18 @@ defmodule NSyslog.Writer.Registry do
     # so we can lookup the pid for this writer with `aid` when its time to send.
     {:via, Registry, {__MODULE__, aid}}
   end
+
+  @doc """
+  Lookup if a `NSyslog.Writer` exists for the given account ID. 
+
+  ## Parameters
+    - `aid`: the account ID to lookup
+
+  ## Returns
+    - `[pid, _] if a Writer exists
+    - [] if a writer does not exist
+  """
+  def lookup(aid) do
+    Registry.lookup(__MODULE__, aid)
+  end
 end
