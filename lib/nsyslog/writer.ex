@@ -72,7 +72,6 @@ defmodule NSyslog.Writer do
     {:ok, state, {:continue, {host, port}}}
   end
 
-
   @doc """
   Server callback to finish initializing a new writer process. We let the newly spawned process
   handle connecting to the syslog server instead of blocking the caller of init/1.

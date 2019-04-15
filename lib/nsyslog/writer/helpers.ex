@@ -55,5 +55,4 @@ defmodule NSyslog.Writer.Helpers do
         &SSL.send/4
     end
   end
-
 end
