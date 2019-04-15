@@ -54,16 +54,6 @@ nsyslog/ $ docker-compose up -d syslog-ng
 
 As previously seen, the application can be run with `iex -S mix` for development. The unit test suite can be run with `mix test`.
 
-## Release
-
-Before you generate a release you need to set the production cookie in `docker/nsyslog/cookie/prod_cookie`. You can generate a one with a command like `:crypto.strong_rand_bytes(32) |> Base.encode16`.
-
-A release Docker image can be built with `docker-compose`:
-
-```bash
-nsyslog/ $ docker-compose build nsyslog
-```
-
 ## Benchmark
 
 A simple benchmark is provided by `benchmark/benchmark.exs`. It can be run as follows:
