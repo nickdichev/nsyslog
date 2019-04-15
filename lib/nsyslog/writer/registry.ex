@@ -33,7 +33,7 @@ defmodule NSyslog.Writer.Registry do
     - `aid`: the account ID to lookup
 
   ## Returns
-    - `[pid, _] if a Writer exists
+    - `[{pid, _}] if a Writer exists
     - [] if a writer does not exist
   """
   def lookup(aid) do
