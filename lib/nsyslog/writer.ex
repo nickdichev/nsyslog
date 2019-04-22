@@ -117,7 +117,7 @@ defmodule NSyslog.Writer do
     end
   end
 
-  def handle_send(message, facility, severity, %{send_fun: send, socket: socket} = state) do
+  defp handle_send(message, facility, severity, %{send_fun: send, socket: socket} = state) do
     case send.(socket, message, facility, severity) do
       :ok ->
         {:reply, :ok, state}
@@ -151,6 +151,12 @@ defmodule NSyslog.Writer do
     handle_send(message, facility, severity, state)
   end
 
+  defp handle_close(state) do
+    debug_host = Helpers.get_address_debug(state.host)
+    Logger.warn("Lost connection to #{debug_host}:#{state.port}")
+    {:noreply, state, {:continue, {state.host, state.port}}}
+  end
+
   @doc """
   Server callback to handle the message we get when a SSL connection is closed. 
 
@@ -159,9 +165,7 @@ defmodule NSyslog.Writer do
     - `state` - The `Writer`'s current state.
   """
   def handle_info({:ssl_closed, _}, state) do
-    debug_host = Helpers.get_address_debug(state.host)
-    Logger.warn("Lost connection to #{debug_host}:#{state.port}")
-    {:noreply, state, {:continue, {state.host, state.port}}}
+    handle_close(state)
   end
 
   @doc """
@@ -172,9 +176,7 @@ defmodule NSyslog.Writer do
     - `state` - The `Writer`'s current state.
   """
   def handle_info({:tcp_closed, _}, state) do
-    debug_host = Helpers.get_address_debug(state.host)
-    Logger.warn("Lost connection to #{debug_host}:#{state.port}")
-    {:noreply, state, {:continue, {state.host, state.port}}}
+    handle_close(state)
   end
 
   @doc """
