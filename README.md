@@ -19,7 +19,7 @@ To use the library, first add the project to your dependencies in `mix.exs`:
 ```elixir
   defp deps do
     [
-      {:nsyslog, git: "https://github.com/nickdichev/nsyslog.git", tag: "0.1.4"}
+      {:nsyslog, git: "https://github.com/nickdichev/nsyslog.git", tag: "0.1.5"}
     ]
   end
 ```
