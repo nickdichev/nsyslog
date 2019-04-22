@@ -14,7 +14,28 @@ Additionally, if you plan to use the `syslog-ng` container provided in this repo
 
 ## Usage
 
-What follows is an example of how a syslog client can be created and used.
+To use the library, first add the project to your dependencies in `mix.exs`:
+
+```elixir
+  defp deps do
+    [
+      {:nsyslog, git: "https://github.com/nickdichev/nsyslog.git", tag: "0.1.4"}
+    ]
+  end
+```
+
+Then configure the library to be started along with your application:
+
+```elixir
+  def application do
+    [
+      extra_applications: [:nsyslog, :logger],
+      ...
+    ]
+  en
+```
+
+You can now use the library as follows:
 
 ```bash
 nsyslog/ $ iex -S mix
