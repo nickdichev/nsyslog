@@ -1,23 +1,10 @@
 defmodule NSyslog.Protocol.SSL do
+  @behaviour NSyslog.Protocol
+
   alias NSyslog.Format.RFC5424
 
   @doc """
-  Connect to a given syslog host when given a binary address.
-
-  ## Parameters
-    - `address` - host to connect to.
-    - `port` - port to connect to.
-
-  ## Returns
-    - {:ok, socket}
-    - {:error, reason}
-  """
-  def connect(address, port) when is_binary(address) and is_integer(port) do
-    connect(String.to_charlist(address), port)
-  end
-
-  @doc """
-  Connect to a given syslog host. 
+  Connect to a given syslog host.
 
   ## Parameters
     -  `address` - host to connect to.
@@ -27,7 +14,8 @@ defmodule NSyslog.Protocol.SSL do
     - {:ok, socket}
     - {:error,  reason}
   """
-  def connect(address, port) when is_integer(port) do
+  @impl true
+  def connect(address, port) do
     conn_opts = [
       # Use active: false since :ssl's ssl_connection_sup monitors the connection
       active: false,
@@ -49,7 +37,10 @@ defmodule NSyslog.Protocol.SSL do
 
   ## Returns
     - :ok
+    - {:error, reason}
   """
+
+  @impl true
   def close(socket) do
     :ssl.close(socket)
   end
@@ -68,6 +59,8 @@ defmodule NSyslog.Protocol.SSL do
     - :ok
     - {:error, reason}
   """
+
+  @impl true
   def send(socket, msg, facility, severity) do
     case RFC5424.format(msg, facility, severity) do
       {:ok, msg} ->

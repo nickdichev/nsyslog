@@ -1,18 +1,29 @@
 alias NSyslog.Writer
 alias NSyslog.Writer.Supervisor
 
-Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, aid: "1", host: "localhost", port: 514})
-Supervisor.create_writer(%Writer{rfc: :rfc5424, protocol: :tcp, aid: "2", host: "localhost", port: 6514})
+Supervisor.create_writer(%Writer{
+  protocol: NSyslog.Protocol.TCP,
+  aid: "1",
+  host: "localhost",
+  port: 514
+})
+
+Supervisor.create_writer(%Writer{
+  protocol: NSyslog.Protocol.SSL,
+  aid: "2",
+  host: "localhost",
+  port: 6514
+})
 
 possible_aids = ["1", "2"]
 
-num_messages = 
-  case Enum.at(System.argv, 0) do
+num_messages =
+  case Enum.at(System.argv(), 0) do
     nil -> 1000
     num -> num |> String.to_integer()
   end
 
-aid_list = 
+aid_list =
   Stream.repeatedly(fn -> Enum.random(possible_aids) end)
   |> Enum.take(num_messages)
 
@@ -24,7 +35,7 @@ Task.async_stream(aid_list, Writer, :send, ["hello!"])
 end_time = System.monotonic_time(:second)
 delta = end_time - start_time
 
-seconds = 
+seconds =
   case delta > 1 do
     true -> "seconds"
     false -> "second"

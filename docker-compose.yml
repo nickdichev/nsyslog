@@ -9,8 +9,8 @@ services:
       - "601:601"
       - "6514:6514"
     volumes:
-      - "${PWD}/docker/syslog-ng/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro"
-      - "${PWD}/docker/syslog-ng/certs:/etc/syslog-ng/certs:ro"
+      - "${PWD}/priv/syslog-ng/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf:ro"
+      - "${PWD}/priv/syslog-ng/certs:/etc/syslog-ng/certs:ro"
     networks:
       - syslog-ng-net
     command: "--no-caps"

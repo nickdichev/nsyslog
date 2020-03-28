@@ -1,4 +1,6 @@
 defmodule NSyslog.Protocol.TCP do
+  @behaviour NSyslog.Protocol
+
   alias NSyslog.Format.RFC3164
   alias NSyslog.Protocol.RFC3164.Validate
 
@@ -13,12 +15,13 @@ defmodule NSyslog.Protocol.TCP do
     - {:ok, socket}
     - {:error, reason}
   """
+  @impl true
   def connect(address, port) when is_binary(address) and is_integer(port) do
     connect(String.to_charlist(address), port)
   end
 
   @doc """
-  Connect to a given syslog host. 
+  Connect to a given syslog host.
 
   ## Parameters
     -  `address` - host to connect to.
@@ -28,6 +31,7 @@ defmodule NSyslog.Protocol.TCP do
     - {:ok, socket}
     - {:error,  reason}
   """
+  @impl true
   def connect(address, port) when is_integer(port) do
     conn_opts = [
       # Use active: :once to get a :tcp_closed message if the connection is closed
@@ -50,6 +54,7 @@ defmodule NSyslog.Protocol.TCP do
   ## Returns
     - :ok
   """
+  @impl true
   def close(socket) do
     :gen_tcp.close(socket)
   end
@@ -68,6 +73,7 @@ defmodule NSyslog.Protocol.TCP do
     - :ok
     - {:error, reason}
   """
+  @impl true
   def send(socket, msg, facility, severity) do
     with {:ok, msg} <- Validate.initial_msg(msg),
          {:ok, msg} <- RFC3164.format(msg, facility, severity),

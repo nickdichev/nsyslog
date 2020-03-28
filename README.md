@@ -19,7 +19,7 @@ To use the library, first add the project to your dependencies in `mix.exs`:
 ```elixir
   defp deps do
     [
-      {:nsyslog, git: "https://github.com/nickdichev/nsyslog.git", tag: "0.1.5"}
+      {:nsyslog, git: "https://github.com/nickdichev/nsyslog.git", tag: "0.2.0"}
     ]
   end
 ```
@@ -41,10 +41,10 @@ You can now use the library as follows:
 nsyslog/ $ iex -S mix
 
 iex(1)> alias NSyslog.Writer
-iex(2)> alias NSyslog.Writer.Supervisor
+iex(2)> alias NSyslog.Writer.{Supervisor, Protocol}
 
-iex(3)> Supervisor.create_writer(%Writer{rfc: :rfc5424, protocol: :tcp, host: "localhost", port: 6514, aid: "1"})
-iex(4)> Supervisor.create_writer(%Writer{rfc: :rfc3164, protocol: :tcp, host: {10,3,123,11}, port: 514, aid: "2"})
+iex(3)> Supervisor.create_writer(%Writer{protocol: Protocol.SSL, host: "localhost", port: 6514, aid: "1"})
+iex(4)> Supervisor.create_writer(%Writer{protocol: Protocol.TCP, host: {10,3,123,11}, port: 514, aid: "2"})
 
 iex(5)> Writer.send("1", "test message -- account ID 1")
 iex(6)> Writer.send("2", "test message -- account ID 2")
@@ -54,8 +54,7 @@ Assuming everything is configured correctly, you should see a formatted syslog m
 
 Let's take a quick look at what each field in the `%Writer{}` struct represents.
 
-* `:rfc` - the RFC specification which is used to format and send messages. Possible values are `:rfc3164` or `:rfc5424`.
-* `:protocol` - the protocol which will be used to send messages. Currently only `:tcp` is supported.
+* `:protocol` - the protocol which will be used to send messages. Two protocols are provided, `NSyslog.Protocol.{TCP, SSL}`. You may provide your own by passing a module that implements the `NSyslog.Protocol` behaviour.
 * `:host` - the host which will receive the message. You can pass a binary, or a tuple-formatted IP address.
 * `:port` - the port whch will receive the message. An integer value is expected.
 * `:aid` - the "account ID" which this `Writer` is for. A binary value is expected.

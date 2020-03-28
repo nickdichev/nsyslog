@@ -23,8 +23,8 @@ erl_crash.dump
 nsyslog-*.tar
 
 # Ignore test certs
-/docker/syslog-ng/certs/
-/docker/nsyslog/certs/
+/priv/syslog-ng/certs/
+/priv/nsyslog/certs/
 
 # Ignore prod cookie
 /docker/nsyslog/cookie/

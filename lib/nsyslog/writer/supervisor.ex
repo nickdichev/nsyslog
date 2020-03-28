@@ -11,7 +11,7 @@ defmodule NSyslog.Writer.Supervisor do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
-  def create_writer(%Writer{rfc: _, protocol: _, aid: _, host: _, port: _} = state) do
+  def create_writer(%Writer{protocol: _, aid: _, host: _, port: _} = state) do
     DynamicSupervisor.start_child(__MODULE__, {Writer, state})
   end
 end

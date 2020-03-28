@@ -1,7 +1,7 @@
 defmodule NSyslog.Writer do
-  defstruct [:rfc, :protocol, :host, :port, :aid, :socket, :connect_fun, :send_fun, backoff: 0]
+  defstruct [:protocol, :host, :port, :aid, :socket, backoff: 0]
 
-  # Only restart the Writer if it exists abnormally 
+  # Only restart the Writer if it exists abnormally
   use GenServer, restart: :transient
   require Logger
 
@@ -26,8 +26,8 @@ defmodule NSyslog.Writer do
   Client call to send a message synchronously.
 
   ## Parameters
-    - `aid` - The account ID to send the message to. This value is looked up in the 
-      `Rsyslog.Writer.Registry` to find the writer's PID. 
+    - `aid` - The account ID to send the message to. This value is looked up in the
+      `Rsyslog.Writer.Registry` to find the writer's PID.
     - `message` - The message to send.
     - `facility` - The facility level to use (default: :log_alert).
     - `severity` - The severity level to use (default: :informational).
@@ -40,8 +40,8 @@ defmodule NSyslog.Writer do
   Client call to send a message asynchronously.
 
   ## Parameters
-    - `aid` - The account ID to send the message to. This value is looked up in the 
-      `Rsyslog.Writer.Registry` to find the writer's PID. 
+    - `aid` - The account ID to send the message to. This value is looked up in the
+      `Rsyslog.Writer.Registry` to find the writer's PID.
     - `message` - The message to send
     - `facility` - The facility level to use (default: :log_alert).
     - `severity` - The severity level to use (default: :informational).
@@ -55,20 +55,14 @@ defmodule NSyslog.Writer do
   ##################
 
   @doc """
-  Server callback to initalize a new writer process. We avoid connecting to the 
+  Server callback to initalize a new writer process. We avoid connecting to the
   host in `init/1` since it is a blocking call. We would rather let the calling process
   continue on, while the newly spawned process tries to connect to the syslog server.
 
   ## Parameters
-    - `state` - The inital state of the `Writer`. 
+    - `state` - The inital state of the `Writer`.
   """
-  def init(%Writer{rfc: rfc, host: host, port: port} = state) do
-    # Cache the writer's connection and send functions in its state.
-    state =
-      state
-      |> Map.put(:connect_fun, Helpers.get_connect_fun(rfc))
-      |> Map.put(:send_fun, Helpers.get_send_fun(rfc))
-
+  def init(%Writer{host: host, port: port} = state) do
     {:ok, state, {:continue, {host, port}}}
   end
 
@@ -80,10 +74,10 @@ defmodule NSyslog.Writer do
     - `{host, port}` - the host:port that the `Writer` tries to connect to.
     - `state` - the `Writer`'s current state.
   """
-  def handle_continue({host, port}, %Writer{connect_fun: connect} = state) do
+  def handle_continue({host, port}, %Writer{protocol: protocol} = state) do
     debug_host = Helpers.get_address_debug(host)
     # Try to connect to the host
-    case connect.(host, port) do
+    case protocol.connect(host, port) do
       {:ok, socket} ->
         Logger.info("Connected to #{debug_host}:#{port}")
 
@@ -117,8 +111,8 @@ defmodule NSyslog.Writer do
     end
   end
 
-  defp handle_send(message, facility, severity, %{send_fun: send, socket: socket} = state) do
-    case send.(socket, message, facility, severity) do
+  defp handle_send(message, facility, severity, %{protocol: protocol, socket: socket} = state) do
+    case protocol.send(socket, message, facility, severity) do
       :ok ->
         {:reply, :ok, state}
 
@@ -158,7 +152,7 @@ defmodule NSyslog.Writer do
   end
 
   @doc """
-  Server callback to handle the message we get when a SSL connection is closed. 
+  Server callback to handle the message we get when a SSL connection is closed.
 
   ## Parameters
     - `{:ssl_closed, _}` - the connection down message.
@@ -169,7 +163,7 @@ defmodule NSyslog.Writer do
   end
 
   @doc """
-  Server callback to handle the message we get when a TCP connection is closed. 
+  Server callback to handle the message we get when a TCP connection is closed.
 
   ## Parameters
     - `{:tcp_closed, _}` - the connection down message.
