@@ -10,15 +10,20 @@ defmodule NSyslog.Format.RFC3164 do
     - `msg`: the message to format
     - `facility`: the facility level used for the priority calculation (default: :log_alert)
     - `severity`: the severity level used for the priority calculation (default: :informational)
-    - `now`: the DateTime which will be formatted. (default: `utc_now/0`).
+    - `now`: the DateTime which will be formatted. (default: `DateTime.utc_now/0`).
 
   ## Returns
     - "`formatted_message`"
     - {:error, reason}
   """
-  def format(msg, facility \\ :log_alert, severity \\ :informational, now \\ nil) do
+  def format(
+        msg,
+        facility \\ :log_alert,
+        severity \\ :informational,
+        datetime \\ DateTime.utc_now()
+      ) do
     case Priority.get(facility, severity) do
-      {:ok, priority} -> {:ok, [priority, Header.get(now), Message.get(msg), "\n"]}
+      {:ok, priority} -> {:ok, [priority, Header.get(datetime), Message.get(msg), "\n"]}
       {:error, reason} -> {:error, reason}
     end
   end
