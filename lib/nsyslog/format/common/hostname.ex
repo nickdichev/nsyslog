@@ -6,9 +6,7 @@ defmodule NSyslog.Format.Common.Hostname do
     - "`hostname`"
   """
   def get() do
-    case :inet.gethostname() do
-      {:ok, hostname} -> hostname |> to_string()
-      {:error, _} -> "-"
-    end
+    {:ok, hostname} = :inet.gethostname()
+    hostname
   end
 end
