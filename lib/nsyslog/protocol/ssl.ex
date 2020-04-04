@@ -15,18 +15,21 @@ defmodule NSyslog.Protocol.SSL do
     - {:error,  reason}
   """
   @impl true
-  def connect(address, port) do
-    conn_opts = [
+  def connect(address, port, opts \\ []) do
+    conn_opts = Keyword.merge(default_conn_opts(), opts)
+    _cerfile = Keyword.fetch!(conn_opts, :certfile)
+    :ssl.connect(address, port, conn_opts)
+  end
+
+  defp default_conn_opts() do
+    [
       # Use active: false since :ssl's ssl_connection_sup monitors the connection
       active: false,
       keepalive: true,
       reuseaddr: true,
       send_timeout: 1000,
-      send_timeout_close: true,
-      certfile: Application.get_env(:nsyslog, :pemfile)
+      send_timeout_close: true
     ]
-
-    :ssl.connect(address, port, conn_opts)
   end
 
   @doc """

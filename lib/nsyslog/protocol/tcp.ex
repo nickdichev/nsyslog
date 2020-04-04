@@ -16,8 +16,10 @@ defmodule NSyslog.Protocol.TCP do
     - {:error, reason}
   """
   @impl true
-  def connect(address, port) when is_binary(address) and is_integer(port) do
-    connect(String.to_charlist(address), port)
+  def connect(address, port, opts \\ [])
+
+  def connect(address, port, opts) when is_binary(address) do
+    connect(String.to_charlist(address), port, opts)
   end
 
   @doc """
@@ -32,8 +34,13 @@ defmodule NSyslog.Protocol.TCP do
     - {:error,  reason}
   """
   @impl true
-  def connect(address, port) when is_integer(port) do
-    conn_opts = [
+  def connect(address, port, opts) do
+    conn_opts = Keyword.merge(default_conn_opts(), opts)
+    :gen_tcp.connect(address, port, conn_opts)
+  end
+
+  defp default_conn_opts() do
+    [
       # Use active: :once to get a :tcp_closed message if the connection is closed
       active: :once,
       keepalive: true,
@@ -41,8 +48,6 @@ defmodule NSyslog.Protocol.TCP do
       send_timeout: 1000,
       send_timeout_close: true
     ]
-
-    :gen_tcp.connect(address, port, conn_opts)
   end
 
   @doc """

@@ -1,5 +1,5 @@
 defmodule NSyslog.Writer do
-  defstruct [:protocol, :host, :port, :aid, :socket, backoff: 0]
+  defstruct [:protocol, :host, :port, :aid, :socket, conn_opts: [], backoff: 0]
 
   # Only restart the Writer if it exists abnormally
   use GenServer, restart: :transient
@@ -62,8 +62,8 @@ defmodule NSyslog.Writer do
   ## Parameters
     - `state` - The inital state of the `Writer`.
   """
-  def init(%Writer{host: host, port: port} = state) do
-    {:ok, state, {:continue, {host, port}}}
+  def init(state) do
+    {:ok, state, {:continue, :syslog_connect}}
   end
 
   @doc """
@@ -74,10 +74,18 @@ defmodule NSyslog.Writer do
     - `{host, port}` - the host:port that the `Writer` tries to connect to.
     - `state` - the `Writer`'s current state.
   """
-  def handle_continue({host, port}, %Writer{protocol: protocol} = state) do
+  def handle_continue(:syslog_connect, state) do
+    %{
+      host: host,
+      port: port,
+      protocol: protocol
+    } = state
+
+    conn_opts = Map.get(state, :conn_opts, [])
     debug_host = Helpers.get_address_debug(host)
+
     # Try to connect to the host
-    case protocol.connect(host, port) do
+    case protocol.connect(host, port, conn_opts) do
       {:ok, socket} ->
         Logger.info("Connected to #{debug_host}:#{port}")
 
@@ -106,7 +114,7 @@ defmodule NSyslog.Writer do
             Logger.warn("Waiting #{backoff_sec} seconds for #{debug_host}:#{port}.")
             Process.sleep(backoff_sec * 1000)
 
-            {:noreply, new_state, {:continue, {host, port}}}
+            {:noreply, new_state, {:continue, :syslog_connect}}
         end
     end
   end
@@ -154,7 +162,7 @@ defmodule NSyslog.Writer do
   defp handle_close(state) do
     debug_host = Helpers.get_address_debug(state.host)
     Logger.warn("Lost connection to #{debug_host}:#{state.port}")
-    {:noreply, state, {:continue, {state.host, state.port}}}
+    {:noreply, state, {:continue, :syslog_connect}}
   end
 
   @doc """

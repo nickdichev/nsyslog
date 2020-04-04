@@ -8,31 +8,20 @@ An example application that uses this library can be found [here](https://github
 
 ## Setup
 
-For RFC5424 destinations, SSL is required. For testing a self-signed certificate will suffice. Update the path to your certificate in the the config files in `config/`.
+For RFC5424 destinations, a valid certificate is required. For testing a self-signed certificate will suffice. The path to the certificate should be provided at runtime in the `conn_opts` when starting a `NSyslog.Writer`.
 
 Additionally, if you plan to use the `syslog-ng` container provided in this repository for testing you should create a self-signed certificate and drop it in `docker/syslog-ng/certs`. There is more information on this in the "Development" section of this document.
 
 ## Usage
 
-To use the library, first add the project to your dependencies in `mix.exs`:
+To use the library, add the project to your dependencies in `mix.exs`:
 
 ```elixir
   defp deps do
     [
-      {:nsyslog, git: "https://github.com/nickdichev/nsyslog.git", tag: "0.2.0"}
+      {:nsyslog, git: "https://github.com/nickdichev/nsyslog.git", tag: "0.3.0"}
     ]
   end
-```
-
-Then configure the library to be started along with your application:
-
-```elixir
-  def application do
-    [
-      extra_applications: [:nsyslog, :logger],
-      ...
-    ]
-  en
 ```
 
 You can now use the library as follows:
@@ -55,11 +44,12 @@ Assuming everything is configured correctly, you should see a formatted syslog m
 Let's take a quick look at what each field in the `%Writer{}` struct represents.
 
 * `:protocol` - the protocol which will be used to send messages. Two protocols are provided, `NSyslog.Protocol.{TCP, SSL}`. You may provide your own by passing a module that implements the `NSyslog.Protocol` behaviour.
+* `:conn_opts` - the keyword option list for the `:ssl` or `:gen_tcp` connection options which is merged into a list of defaults. Note: for `Writer`'s which use the `NSyslog.Protocol.SSL` the `:certfile` option is required.
 * `:host` - the host which will receive the message. You can pass a binary, or a tuple-formatted IP address.
 * `:port` - the port whch will receive the message. An integer value is expected.
 * `:aid` - the "account ID" which this `Writer` is for. A binary value is expected.
 
-The `:aid` field is used as a lookup key in a registry to determine which `NSyslog.Writer` will handle the message.
+The `:aid` field is used as a lookup key in a registry to determine which `NSyslog.Writer` will handle the message when you call `send/2`.
 
 ## Development
 
@@ -98,4 +88,6 @@ I am hoping to improve the performance and benchmark against a larger number of 
 * Determine why the `NSyslog.Writer` goes "reconnect crazy" when a RFC3164 connection is closed.
 * Improve source documentation and add doctests.
 * Improve unit test coverage.
+* Investigate connection pooling. (dynamically?)
+* Add ability to update connection options of an `NSylog.Writer`. (would anyone even want this?)
 * Add typespecs.
