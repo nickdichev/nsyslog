@@ -114,12 +114,12 @@ defmodule NSyslog.Writer do
   defp handle_send(message, facility, severity, %{protocol: protocol, socket: socket} = state) do
     case protocol.send(socket, message, facility, severity) do
       :ok ->
-        {:reply, :ok, state}
+        :ok
 
       {:error, reason} ->
         debug_host = Helpers.get_address_debug(state.host)
         Logger.warn("Could not send message to #{debug_host}:#{state.port} -- #{reason}.")
-        {:reply, {:error, reason}, state}
+        {:error, reason}
     end
   end
 
@@ -131,7 +131,12 @@ defmodule NSyslog.Writer do
     - `state` - the `Writer`'s current state.
   """
   def handle_call({:send, message, facility, severity}, _, state) do
-    handle_send(message, facility, severity, state)
+    send_result = handle_send(message, facility, severity, state)
+
+    case send_result do
+      :ok -> {:reply, :ok, state}
+      {:error, reason} -> {:reply, {:error, reason}, state}
+    end
   end
 
   @doc """
@@ -143,6 +148,7 @@ defmodule NSyslog.Writer do
   """
   def handle_cast({:send, message, facility, severity}, state) do
     handle_send(message, facility, severity, state)
+    {:noreply, state}
   end
 
   defp handle_close(state) do
